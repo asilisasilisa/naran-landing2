@@ -141,7 +141,7 @@ function ApplyButton({ children = 'Apply now →', onClick, className = '' }) {
   )
 }
 
-function Hero({ onApply, onSeeMotos }) {
+function Hero({ onApply, onSeeMotos, onSelectMoto }) {
   return (
     <section className="bg-[#C8F437] text-black px-5 pt-9 pb-8">
       <div className="text-center max-w-sm mx-auto">
@@ -156,7 +156,11 @@ function Hero({ onApply, onSeeMotos }) {
 
       <div className="grid grid-cols-2 gap-3 mt-7 max-w-sm mx-auto">
         {motos.slice(0, 2).map((moto) => (
-          <div key={moto.id} className="bg-white/80 rounded-2xl p-3 border border-black/10">
+          <button
+            key={moto.id}
+            onClick={() => onSelectMoto(moto)}
+            className="bg-white/80 rounded-2xl p-3 border border-black/10 text-left active:scale-95 transition"
+          >
             <div className="bg-white rounded-xl h-24 flex items-center justify-center text-5xl mb-3">
               {moto.img}
             </div>
@@ -165,7 +169,7 @@ function Hero({ onApply, onSeeMotos }) {
             <div className="text-black font-black text-lg mt-1">
               {fmt(moto.price18)}<span className="text-black/50 text-xs font-bold"> /week</span>
             </div>
-          </div>
+          </button>
         ))}
       </div>
 
@@ -205,7 +209,7 @@ function Benefits() {
 }
 
 function ProcessBlock() {
-  const steps = ['Choose your moto', 'Get approved (24h)', 'Sign at our Bogotá office']
+  const steps = ['Choose your moto', 'Get approved (24h)', 'Sign at our Bogotá office and pick up your moto']
 
   return (
     <section className="px-5 py-6 border-t border-gray-800">
@@ -225,7 +229,7 @@ function ProcessBlock() {
 }
 
 function RequirementsBlock() {
-  const items = ['18+', 'ID', 'Driver’s license', 'Utility bill', '2 references']
+  const items = ['ID (18+)', 'Driver’s license', 'Utility bill', '2 references']
 
   return (
     <section className="px-5 py-6 border-t border-gray-800">
@@ -452,6 +456,9 @@ function MultiStepForm({ preselectedMotoId }) {
   const [step, setStep] = useState(1)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
+  const [otpSent, setOtpSent] = useState(false)
+  const [otp, setOtp] = useState('')
+  const [phoneVerified, setPhoneVerified] = useState(false)
   const [selectedMotoId, setSelectedMotoId] = useState(preselectedMotoId || '')
   const [term, setTerm] = useState(18)
   const [docs, setDocs] = useState({ idFront: false, idBack: false, license: false, utilityBill: false })
@@ -464,7 +471,7 @@ function MultiStepForm({ preselectedMotoId }) {
   const uploadedDocs = Object.values(docs).filter(Boolean).length
 
   const canNext = () => {
-    if (step === 1) return name.trim().length > 1 && phone.trim().length > 5
+    if (step === 1) return name.trim().length > 1 && phone.trim().length > 5 && phoneVerified
     if (step === 2) return Boolean(selectedMotoId)
     if (step === 3) return docs.idFront && docs.idBack && docs.license && docs.utilityBill
     return true
@@ -490,7 +497,7 @@ function MultiStepForm({ preselectedMotoId }) {
         </div>
         <div>
           <div className={`font-bold text-sm ${docs[docKey] ? 'text-[#C8F437]' : 'text-white'}`}>{label}</div>
-          <div className="text-xs text-gray-500 mt-0.5">{docs[docKey] ? 'Photo uploaded' : 'Tap to take photo'}</div>
+          <div className="text-xs text-gray-500 mt-0.5">{docs[docKey] ? 'Photo uploaded' : 'Tap to upload'}</div>
         </div>
       </div>
     </button>
@@ -536,11 +543,48 @@ function MultiStepForm({ preselectedMotoId }) {
                   <label className="text-xs text-gray-500 mb-1 block">WhatsApp</label>
                   <input
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      setPhone(e.target.value)
+                      setOtpSent(false)
+                      setOtp('')
+                      setPhoneVerified(false)
+                    }}
                     type="tel"
                     placeholder="300 123 4567"
                     className="w-full bg-[#1A2230] rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-[#C8F437]"
                   />
+                  {!phoneVerified && !otpSent && (
+                    <button
+                      type="button"
+                      onClick={() => phone.trim().length > 5 && setOtpSent(true)}
+                      className={`w-full mt-2 text-sm font-bold py-2.5 rounded-xl transition ${
+                        phone.trim().length > 5 ? 'bg-[#C8F437] text-black' : 'bg-gray-700 text-gray-500'
+                      }`}
+                    >
+                      Send code to WhatsApp
+                    </button>
+                  )}
+                  {!phoneVerified && otpSent && (
+                    <div className="mt-2 space-y-2">
+                      <input
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        placeholder="Enter code"
+                        inputMode="numeric"
+                        className="w-full bg-[#1A2230] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-[#C8F437]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => otp.trim().length > 2 && setPhoneVerified(true)}
+                        className={`w-full text-sm font-bold py-2.5 rounded-xl transition ${
+                          otp.trim().length > 2 ? 'bg-[#C8F437] text-black' : 'bg-gray-700 text-gray-500'
+                        }`}
+                      >
+                        Verify phone
+                      </button>
+                    </div>
+                  )}
+                  {phoneVerified && <div className="text-[#C8F437] text-xs font-bold mt-2">Phone verified ✅</div>}
                 </div>
                 <div className="bg-[#1A2230] rounded-xl px-4 py-3.5">
                   <div className="text-xs text-gray-500 mb-1">City</div>
@@ -568,6 +612,9 @@ function MultiStepForm({ preselectedMotoId }) {
                       <div className="font-bold text-sm text-white">{moto.name}</div>
                       <div className="text-xs text-gray-400">
                         {moto.condition} · {moto.year}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        Deposit from {fmt(moto.deposit)}
                       </div>
                     </div>
                     <div className="text-right">
@@ -608,6 +655,19 @@ function MultiStepForm({ preselectedMotoId }) {
                 <DocUploadBox label="ID — back side" docKey="idBack" icon="🔄" />
                 <DocUploadBox label="Driver’s license" docKey="license" icon="🏍️" />
                 <DocUploadBox label="Utility bill" docKey="utilityBill" icon="📄" />
+              </div>
+
+              <div className="mt-4 bg-[#1A2230] rounded-xl p-3 text-center">
+                <p className="text-gray-400 text-sm font-bold">Don’t have all documents now?</p>
+                <a
+                  href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi! I started my application but I will send documents later')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex w-full justify-center bg-[#0B1118] border border-gray-700 text-white font-bold text-sm py-3 rounded-xl"
+                >
+                  Send on WhatsApp later
+                </a>
+                <p className="text-gray-500 text-xs mt-2">We’ll remind you later</p>
               </div>
 
               <div className="mt-4 pt-4 border-t border-gray-800">
@@ -784,7 +844,6 @@ function MotoPage({ moto, onBack, onApply }) {
         </div>
       </section>
 
-      <Benefits />
       <ProcessBlock />
       <FAQ />
       <Footer />
@@ -839,9 +898,8 @@ export default function App() {
         <MotoPage moto={selectedMoto} onBack={() => setSelectedMoto(null)} onApply={scrollToForm} />
       ) : (
         <>
-          <Hero onApply={() => scrollToForm('')} onSeeMotos={scrollToMotos} />
+          <Hero onApply={() => scrollToForm('')} onSeeMotos={scrollToMotos} onSelectMoto={setSelectedMoto} />
           <EarningsCalculator moto={getMotoById('akt-nkd-125')} term={18} />
-          <Benefits />
           <ProcessBlock />
           <RequirementsBlock />
           <div ref={motosRef}>
