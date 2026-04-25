@@ -113,7 +113,7 @@ function Header({ goHome }) {
       <button onClick={goHome} className="text-black font-black text-2xl tracking-tight">
         naran.
       </button>
-      <span className="text-black/60 text-sm font-medium">Bogotá</span>
+      <span className="text-black/60 text-sm font-medium">Bogotá only</span>span>
     </header>
   )
 }
@@ -163,7 +163,7 @@ function Hero({ onApply, onSeeMotos }) {
       </div>
 
       <div className="grid grid-cols-2 gap-2 mt-5 text-center text-xs">
-        {['Approved in 24h', 'Deposit from $400K', 'No credit history', 'Start fast'].map((item) => (
+    ['Approved in 24h', 'Deposit from $400K', 'Bogotá only', 'No credit history']tory'].map((item) => (
           <div key={item} className="bg-[#111820] border border-gray-800 rounded-xl p-2 text-gray-300">
             {item}
           </div>
@@ -179,20 +179,13 @@ function Hero({ onApply, onSeeMotos }) {
         </button>
       </div>
     </section>
-  )
-}
-
-function Benefits() {
+ function Benefits() {
   const items = [
     ['🏍️', 'Ready-to-work moto'],
-    ['📋', 'Insurance included'],
+    ['📋', 'SOAT included'],
     ['📍', 'GPS installed'],
-    ['🔧', '24/7 support'],
     ['⚡', 'Get your moto fast'],
-  ]
-
-  return (
-    <section className="px-5 py-6 border-t border-gray-800">
+  ]ame="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="What you get" />
       <div className="grid grid-cols-2 gap-3">
         {items.map(([icon, text]) => (
@@ -207,10 +200,7 @@ function Benefits() {
 }
 
 function ProcessBlock() {
-  const steps = ['Choose your moto', 'Get approved (24h)', 'Sign and pick up', 'Start working']
-
-  return (
-    <section className="px-5 py-6 border-t border-gray-800">
+  const steps = ['Choose your motoconst steps = ['Choose your moto', 'Get approved (24h)', 'Sign at our Bogotá office']5 py-6 border-t border-gray-800">
       <SectionTitle title="How it works" />
       <div className="space-y-3">
         {steps.map((step, i) => (
@@ -227,10 +217,7 @@ function ProcessBlock() {
 }
 
 function RequirementsBlock() {
-  const items = ['ID', 'Driver’s license', 'Utility bill', '2 references']
-
-  return (
-    <section className="px-5 py-6 border-t border-gray-800">
+  const items = ['18+', 'ID', 'Driver’s liconst items = ['18+', 'ID', 'Driver’s license', 'Utility bill', '2 references']me="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="What you need" />
       <div className="grid grid-cols-2 gap-2">
         {items.map((item) => (
@@ -343,21 +330,47 @@ function CatalogSection({ onDetails, onApply }) {
     <section className="px-5 py-6 border-t border-gray-800" id="motos">
       <SectionTitle title="Available motos" subtitle="Choose the model that works for you" />
       <div className="space-y-3">
+     <div className="space-y-3">
         {motos.map((moto) => (
           <MotoCard key={moto.id} moto={moto} onDetails={onDetails} onApply={onApply} />
         ))}
-      </div>
-    </section>
-  )
-}
 
-// ==================== REVIEWS + FAQ ====================
+        <div className="bg-[#111820] border border-dashed border-gray-700 rounded-2xl p-4 text-center">
+          <div className="text-3xl mb-2">❓</div>
+          <h3 className="text-white font-black text-base">Don’t see the moto you want?</h3>
+          <p className="text-gray-400 text-sm mt-1">Message us on WhatsApp. We may help you get another model.</p>
+          <a
+            href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi! I want a different moto model')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex w-full justify-center bg-[#1A2230] text-white font-bold text-sm py-3 rounded-xl"
+          >
+            Message on WhatsApp
+          </a>
+        </div>
+      </div>border-dashed border-gray-700 rounded-2xl p-4 text-center">
+          <div classNamfunction Reviews() {
+  const scrollRef = useRef(null)
+  const [active, setActive] = useState(0)
 
-function Reviews() {
+  const scroll = (dir) => {
+    if (!scrollRef.current) return
+    const next = Math.max(0, Math.min(reviews.length - 1, active + dir))
+    setActive(next)
+    scrollRef.current.scrollTo({ left: next * 310, behavior: 'smooth' })
+  }
+
   return (
     <section className="px-5 py-6 border-t border-gray-800">
-      <SectionTitle title="What our drivers say" subtitle="Real stories from Bogotá" />
-      <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
+      <div className="flex items-end justify-between mb-4">
+        <SectionTitle title="What our drivers say" subtitle="Real stories from Bogotá" />
+        <div className="flex gap-2 pb-1">
+          <button onClick={() => scroll(-1)} className="w-9 h-9 rounded-full bg-[#111820] border border-gray-800 text-gray-400 font-bold">←</button>
+          <button onClick={() => scroll(1)} className="w-9 h-9 rounded-full bg-[#111820] border border-gray-800 text-gray-400 font-bold">→</button>
+        </div>
+      </div>
+
+      <div ref={scrollRef} className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
         {reviews.map((review) => (
           <div key={review.name} className="snap-start shrink-0 w-72 bg-[#111820] border border-gray-800 rounded-2xl p-4">
             <div className="flex items-center gap-3 mb-3">
@@ -374,9 +387,50 @@ function Reviews() {
           </div>
         ))}
       </div>
+
+      <a
+        href="https://www.tiktok.com/@naran"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 flex items-center justify-center gap-2 w-full bg-[#111820] border border-gray-800 text-white font-bold text-sm py-3 rounded-xl"
+      >
+        🎵 More stories on TikTok
+      </a>
     </section>
   )
 }
+
+function FAQnd justify-between mb-4">
+        <SectionTitle title="What our drivers say" subtitle="Real stories from Bogotá" />
+        <div className="flex gap-2 pb-1">
+          <button onClick={() => scroll(-1)} className="w-9 h-9 rounded-full bg-[#111820] border border-gray-800 text-gray-400 font-bold">←</button>
+          <button onClick={() => scroll(1)} className="w-9 h-9 rounded-full bg-[#111820] border border-gray-800 text-gray-400 font-bold">→</button>
+        </div>
+      </div>
+
+      <div ref={scrollRef} className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
+        {reviews.map((review) => (
+          <div key={review.name} className="snap-start shrink-0 w-72 bg-[#111820] border border-gray-800 rounded-2xl p-4">
+         -3">
+              <div className="w-10 h-10 rounded-full bg-[#1A2230] text-[#C8F437] font-black flex items-center justify-center">
+                {review.name[0]}
+              </div>
+              <div>
+                <div className="text-white font-bold text-sm">{review.name}</div>
+                <div className="text-gray-500 text-xs">{review.platform}</div>
+              </div>
+            </div>
+            <p className="text-gray-300 text-sm italic leading-relaxed">“{review.text}”</p>
+            <div className="text-yellow-400 text-xs mt-3">★★★★★</div>
+          </div>
+        ))}
+      </div>
+
+      <a
+        href="https://www.tiktok.com/@naran"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 flex items-center justify-center gap-2 w-full bg-[#111820] border border-gray-800 text-white font-bold text-sm py-3 rounded-xl"
 
 function FAQ() {
   return (
@@ -400,8 +454,7 @@ function MultiStepForm({ preselectedMotoId }) {
   const [step, setStep] = useState(1)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [city, setCity] = useState('Bogotá')
-  const [selectedMotoId, setSelectedMotoId] = useState(preselectedMotoId || '')
+    const [selectedMotoId, setSelectedMotoId] = useState(preselectedMotoId || '')
   const [term, setTerm] = useState(18)
   const [docs, setDocs] = useState({ idFront: false, idBack: false, license: false, utilityBill: false })
   const [ref1, setRef1] = useState({ name: '', phone: '' })
@@ -458,20 +511,10 @@ function MultiStepForm({ preselectedMotoId }) {
           <div className="bg-[#C8F437] h-full transition-all duration-500" style={{ width: `${progress}%` }} />
         </div>
 
-        <div className="px-4 pt-3 pb-1 flex justify-between items-center">
-          <span className="text-xs text-gray-500">Step {step} of {totalSteps}</span>
-          {step > 1 && step < 4 && (
-            <button onClick={() => setStep(step - 1)} className="text-xs text-gray-400 underline">
-              ← Back
-            </button>
-          )}
-        </div>
-
-        <div className="p-5 pt-2">
-          {step === 1 && (
-            <div>
-              <h3 className="font-black text-lg mb-1 text-white">Your info</h3>
-              <p className="text-gray-400 text-xs mb-4">We will contact you today</p>
+ <div className="bg-[#1A2230] rounded-xl px-4 py-3.5">
+                  <div className="text-xs text-gray-500 mb-1">City</div>
+                  <div className="text-white text-sm font-bold">Bogotá only</div>
+                </div>xt-gray-400 text-xs mb-4">We will contact you today</p>
               <div className="space-y-3">
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Full name</label>
@@ -492,17 +535,9 @@ function MultiStepForm({ preselectedMotoId }) {
                     className="w-full bg-[#1A2230] rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-[#C8F437]"
                   />
                 </div>
-                <div>
-                  <label className="text-xs text-gray-500 mb-1 block">City</label>
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full bg-[#1A2230] rounded-xl px-4 py-3.5 text-sm text-white outline-none focus:ring-2 focus:ring-[#C8F437]"
-                  >
-                    <option>Bogotá</option>
-                    <option>Soacha</option>
-                    <option>Other city</option>
-                  </select>
+                <div className="bg-[#1A2230] rounded-xl px-4 py-3.5">
+                  <div className="text-xs text-gray-500 mb-1">City</div>
+                  <div className="text-white text-sm font-bold">Bogotá only</div>
                 </div>
               </div>
             </div>
@@ -710,10 +745,8 @@ function MotoPage({ moto, onBack, onApply }) {
         <div className="mt-5">
           <div className="text-xs text-gray-500 mb-2">Plan</div>
           <div className="grid grid-cols-2 gap-2">
-            {[18, 12].map((p) => (
-              <button
-                key={p}
-                onClick={() => setTerm(p)}
+   <p className="text-gray-500 text-xs mt-2">Flexible deposit — choose what works for you.</p>
+          <p className="text-gray-500 text-xs mt-1">Initial payment from {fmt(moto.deposit)}</p>   onClick={() => setTerm(p)}
                 className={`py-3 rounded-xl text-sm font-bold transition-all ${term === p ? 'bg-[#C8F437] text-black' : 'bg-[#111820] text-gray-400'}`}
               >
                 {p} months
