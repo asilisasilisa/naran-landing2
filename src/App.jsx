@@ -469,6 +469,7 @@ function MultiStepForm({ preselectedMotoId }) {
   const [docs, setDocs] = useState({ idFront: false, idBack: false, license: false, utilityBill: false })
   const [ref1, setRef1] = useState({ name: '', phone: '' })
   const [ref2, setRef2] = useState({ name: '', phone: '' })
+const [depositType, setDepositType] = useState('full')
 
   const selectedMoto = useMemo(() => getMotoById(selectedMotoId), [selectedMotoId])
   const totalSteps = 4
@@ -660,6 +661,41 @@ Can be paid weekly in the first month
 <div className="bg-[#1A2230] rounded-xl p-4 mb-4">
 <div className="text-white font-bold text-sm mb-1">
 Initial payment
+</div>
+
+<div className="text-[#C8F437] font-black text-lg mb-3">
+{selectedMoto ? fmt(selectedMoto.deposit) : ''}
+</div>
+
+<div className="text-gray-400 text-xs mb-2">
+Choose how to pay your deposit
+</div>
+
+<div className="grid grid-cols-2 gap-2">
+<button
+type="button"
+onClick={() => setDepositType('full')}
+className={`font-bold py-2 rounded-xl text-sm ${
+depositType === 'full'
+? 'bg-[#C8F437] text-black'
+: 'bg-[#111820] text-white border border-gray-700'
+}`}
+>
+Pay in full
+</button>
+
+<button
+type="button"
+onClick={() => setDepositType('weekly')}
+className={`font-bold py-2 rounded-xl text-sm ${
+depositType === 'weekly'
+? 'bg-[#C8F437] text-black'
+: 'bg-[#111820] text-white border border-gray-700'
+}`}
+>
+Pay weekly (1st month)
+</button>
+</div>
 </div>
 
 <div className="text-[#C8F437] font-black text-lg mb-3">
