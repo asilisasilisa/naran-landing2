@@ -70,11 +70,11 @@ const faqs = [
   },
   {
     q: 'Do I need a deposit?',
-    a: 'Yes. Initial payment starts from $400,000 COP and can be split into payments.',
+    a: 'Yes. Initial payment starts from $400,000 COP and can be paid weekly during the first month.',
   },
   {
     q: 'What do I need to apply?',
-    a: 'ID, driver’s license, utility bill and 2 references. No credit history needed.',
+    a: 'You need to be 18+. ID, driver’s license, utility bill and 2 references. No credit history needed.',
   },
   {
     q: 'Can I work on any platform?',
@@ -94,7 +94,8 @@ const faqs = [
 
 const fmt = (n) => '$' + Math.round(n).toLocaleString('es-CO')
 const WA_NUMBER = '573001234567'
-const brand = '#C8F437'
+const BRAND = '#C8F437'
+const RED = '#FF4A4A'
 
 function getMotoById(id) {
   return motos.find((moto) => moto.id === id) || null
@@ -109,11 +110,11 @@ function getWeeklyPrice(moto, term) {
 
 function Header({ goHome }) {
   return (
-    <header className="sticky top-0 z-50 bg-[#C8F437] px-5 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-[#C8F437] px-5 py-3 flex items-center justify-between border-b border-black/10">
       <button onClick={goHome} className="text-black font-black text-2xl tracking-tight">
         naran.
       </button>
-      <span className="text-black/60 text-sm font-medium">Bogotá only</span>span>
+      <span className="text-black/60 text-sm font-bold">Bogotá</span>
     </header>
   )
 }
@@ -129,63 +130,67 @@ function SectionTitle({ title, subtitle }) {
   )
 }
 
+function ApplyButton({ children = 'Apply now →', onClick, className = '' }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`bg-[#FF4A4A] text-white font-black rounded-xl active:scale-95 transition shadow-lg shadow-red-950/20 ${className}`}
+    >
+      {children}
+    </button>
+  )
+}
+
 function Hero({ onApply, onSeeMotos }) {
   return (
-    <section className="px-5 pt-8 pb-6">
-      <div className="text-center">
-        <p className="text-[#C8F437] text-xs font-bold uppercase tracking-widest mb-2">Rent-to-own moto</p>
-        <h1 className="text-white text-3xl font-black leading-tight">
-          Your moto for <span className="text-[#C8F437]">delivery work</span>
-        </h1>
-        <p className="text-gray-400 text-sm mt-3">
-          Choose your moto. Pay it off with what you earn.
-        </p>
+    <section className="bg-[#C8F437] text-black px-5 pt-9 pb-8">
+      <div className="text-center max-w-sm mx-auto">
+        <h1 className="text-4xl font-black leading-tight">Ride and earn.</h1>
+        <p className="text-black/60 text-lg font-bold mt-2">Pay your moto while you work.</p>
+        <div className="flex justify-center gap-4 text-sm text-black/60 mt-4">
+          <span>Approved in 24h</span>
+          <span>·</span>
+          <span>From $160K/week</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mt-6">
+      <div className="grid grid-cols-2 gap-3 mt-7 max-w-sm mx-auto">
         {motos.slice(0, 2).map((moto) => (
-          <div key={moto.id} className="bg-[#111820] border border-gray-800 rounded-2xl p-3">
-            <div className="bg-[#1A2230] rounded-xl h-24 flex items-center justify-center text-5xl mb-3">
+          <div key={moto.id} className="bg-white/80 rounded-2xl p-3 border border-black/10">
+            <div className="bg-white rounded-xl h-24 flex items-center justify-center text-5xl mb-3">
               {moto.img}
             </div>
-            <div className="flex items-center gap-1 mb-1">
-              <span className="bg-[#C8F437] text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                {moto.condition}
-              </span>
-              <span className="text-gray-500 text-xs">{moto.year}</span>
-            </div>
-            <div className="text-white text-sm font-bold truncate">{moto.name}</div>
-            <div className="text-[#C8F437] font-black text-lg mt-1">
-              {fmt(moto.price18)}<span className="text-gray-500 text-xs font-normal"> /week</span>
+            <div className="text-black/50 text-xs font-bold">{moto.condition} · {moto.year}</div>
+            <div className="text-black text-sm font-black truncate mt-0.5">{moto.name}</div>
+            <div className="text-black font-black text-lg mt-1">
+              {fmt(moto.price18)}<span className="text-black/50 text-xs font-bold"> /week</span>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mt-5 text-center text-xs">
-    ['Approved in 24h', 'Deposit from $400K', 'Bogotá only', 'No credit history']tory'].map((item) => (
-          <div key={item} className="bg-[#111820] border border-gray-800 rounded-xl p-2 text-gray-300">
-            {item}
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <button onClick={onApply} className="bg-[#C8F437] text-black font-black py-3.5 rounded-xl active:scale-95 transition">
-          Apply now
-        </button>
-        <button onClick={onSeeMotos} className="bg-[#111820] border border-gray-700 text-white font-bold py-3.5 rounded-xl active:scale-95 transition">
-          See motos
+      <div className="mt-6 max-w-sm mx-auto">
+        <ApplyButton onClick={onApply} className="w-full py-4 text-lg">
+          Apply now →
+        </ApplyButton>
+        <button onClick={onSeeMotos} className="w-full mt-3 bg-black/10 text-black font-black py-3 rounded-xl active:scale-95 transition">
+          See available motos
         </button>
       </div>
     </section>
- function Benefits() {
+  )
+}
+
+function Benefits() {
   const items = [
     ['🏍️', 'Ready-to-work moto'],
     ['📋', 'SOAT included'],
     ['📍', 'GPS installed'],
-    ['⚡', 'Get your moto fast'],
-  ]ame="px-5 py-6 border-t border-gray-800">
+    ['⚡', 'Fast delivery'],
+  ]
+
+  return (
+    <section className="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="What you get" />
       <div className="grid grid-cols-2 gap-3">
         {items.map(([icon, text]) => (
@@ -200,7 +205,10 @@ function Hero({ onApply, onSeeMotos }) {
 }
 
 function ProcessBlock() {
-  const steps = ['Choose your motoconst steps = ['Choose your moto', 'Get approved (24h)', 'Sign at our Bogotá office']5 py-6 border-t border-gray-800">
+  const steps = ['Choose your moto', 'Get approved (24h)', 'Sign at our Bogotá office']
+
+  return (
+    <section className="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="How it works" />
       <div className="space-y-3">
         {steps.map((step, i) => (
@@ -217,7 +225,10 @@ function ProcessBlock() {
 }
 
 function RequirementsBlock() {
-  const items = ['18+', 'ID', 'Driver’s liconst items = ['18+', 'ID', 'Driver’s license', 'Utility bill', '2 references']me="px-5 py-6 border-t border-gray-800">
+  const items = ['18+', 'ID', 'Driver’s license', 'Utility bill', '2 references']
+
+  return (
+    <section className="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="What you need" />
       <div className="grid grid-cols-2 gap-2">
         {items.map((item) => (
@@ -232,8 +243,8 @@ function RequirementsBlock() {
 }
 
 function EarningsCalculator({ moto, term = 18, compact = false }) {
-  const [hours, setHours] = useState(8)
-  const [days, setDays] = useState(6)
+  const [hours, setHours] = useState(6)
+  const [days, setDays] = useState(5)
 
   const weeklyPayment = getWeeklyPrice(moto, term)
   const gross = hours * days * 24000
@@ -241,46 +252,60 @@ function EarningsCalculator({ moto, term = 18, compact = false }) {
   const keep = Math.max(gross - weeklyPayment - gasAndFees, 0)
 
   return (
-    <section className={compact ? '' : 'px-5 py-6 border-t border-gray-800'}>
-      {!compact && <SectionTitle title="How much you can earn" subtitle="Simple estimate for delivery work" />}
+    <section className={compact ? '' : 'px-5 py-7 border-t border-gray-800'}>
+      <div className="bg-white text-black rounded-3xl p-5 shadow-xl">
+        <style>{`input[type=range]{-webkit-appearance:none;width:100%;height:7px;border-radius:999px;background:#E5E7EB;outline:none}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:${BRAND};cursor:pointer;border:4px solid white;box-shadow:0 0 0 3px ${BRAND}}`}</style>
 
-      <div className="bg-[#111820] border border-gray-800 rounded-2xl p-4">
-        <style>{`input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:999px;background:#374151;outline:none}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:${brand};cursor:pointer;border:2px solid #111820}`}</style>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 rounded-xl bg-[#C8F437] flex items-center justify-center text-xl">▣</div>
+          <h2 className="text-black text-xl font-black leading-tight uppercase">
+            Your estimated earnings<br />per week
+          </h2>
+        </div>
 
-        <div className="mb-4">
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-400">Hours per day</span>
-            <span className="text-[#C8F437] font-black">{hours}h</span>
+        <div className="mb-6">
+          <div className="flex justify-between text-lg mb-3">
+            <span className="text-gray-500 font-bold">Hours per day</span>
+            <span className="text-[#27441B] font-black">{hours} hours</span>
           </div>
           <input type="range" min={4} max={12} value={hours} onChange={(e) => setHours(Number(e.target.value))} />
+          <div className="flex justify-between text-gray-400 text-sm mt-3">
+            <span>4h</span>
+            <span>12h</span>
+          </div>
         </div>
 
-        <div className="mb-4">
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-400">Days per week</span>
-            <span className="text-[#C8F437] font-black">{days}</span>
+        <div className="border-t border-gray-200 pt-6 mb-6">
+          <div className="flex justify-between text-lg mb-3">
+            <span className="text-gray-500 font-bold">Days per week</span>
+            <span className="text-[#27441B] font-black">{days} days</span>
           </div>
           <input type="range" min={3} max={7} value={days} onChange={(e) => setDays(Number(e.target.value))} />
+          <div className="flex justify-between text-gray-400 text-sm mt-3">
+            <span>3 days</span>
+            <span>7 days</span>
+          </div>
         </div>
 
-        <div className="bg-[#0B1118] rounded-xl p-3 space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-400">You earn</span>
-            <span className="text-green-400 font-bold">{fmt(gross)} / week</span>
+        <div className="space-y-3 text-lg">
+          <div className="flex justify-between">
+            <span className="text-gray-500 font-bold">You earn</span>
+            <span className="text-[#27441B] font-black">{fmt(gross)}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Moto payment</span>
-            <span className="text-[#C8F437] font-bold">−{fmt(weeklyPayment)}</span>
+          <div className="flex justify-between bg-[#F4FAE9] border border-[#C8F437] rounded-xl p-3 -mx-1">
+            <span className="text-gray-500 font-bold">Moto payment</span>
+            <span className="text-gray-700 font-black">−{fmt(weeklyPayment)}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Gas + app fees</span>
-            <span className="text-red-400 font-bold">−{fmt(gasAndFees)}</span>
+          <div className="flex justify-between">
+            <span className="text-gray-500 font-bold">Gas + app fees</span>
+            <span className="text-gray-500 font-black">−{fmt(gasAndFees)}</span>
           </div>
-          <div className="pt-3 mt-2 border-t border-gray-800 text-center">
-            <div className="text-gray-400 text-xs mb-1">After paying your moto, you keep</div>
-            <div className="text-[#C8F437] text-3xl font-black">{fmt(keep)}</div>
-            <div className="text-gray-500 text-xs">/ week</div>
-          </div>
+        </div>
+
+        <div className="pt-5 mt-5 border-t border-[#DDF5A2] text-center">
+          <div className="text-gray-500 text-base font-bold mb-2">After paying your moto, you keep</div>
+          <div className="text-[#27441B] text-5xl font-black">{fmt(keep)}</div>
+          <div className="text-gray-500 text-lg font-bold mt-1">/ week</div>
         </div>
       </div>
     </section>
@@ -310,16 +335,16 @@ function MotoCard({ moto, onDetails, onApply }) {
             {fmt(moto.price18)}
             <span className="text-gray-500 text-xs font-normal"> /week</span>
           </p>
-          <p className="text-gray-500 text-xs mt-0.5">18 months plan</p>
+          <p className="text-gray-500 text-xs mt-0.5">Deposit from {fmt(moto.deposit)}</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2 mt-4">
         <button onClick={() => onDetails(moto)} className="bg-[#1A2230] text-gray-300 font-bold text-sm py-2.5 rounded-xl">
           Details
         </button>
-        <button onClick={() => onApply(moto.id)} className="bg-[#C8F437] text-black text-sm font-black py-2.5 rounded-xl">
+        <ApplyButton onClick={() => onApply(moto.id)} className="text-sm py-2.5">
           Apply now →
-        </button>
+        </ApplyButton>
       </div>
     </div>
   )
@@ -330,7 +355,6 @@ function CatalogSection({ onDetails, onApply }) {
     <section className="px-5 py-6 border-t border-gray-800" id="motos">
       <SectionTitle title="Available motos" subtitle="Choose the model that works for you" />
       <div className="space-y-3">
-     <div className="space-y-3">
         {motos.map((moto) => (
           <MotoCard key={moto.id} moto={moto} onDetails={onDetails} onApply={onApply} />
         ))}
@@ -348,8 +372,14 @@ function CatalogSection({ onDetails, onApply }) {
             Message on WhatsApp
           </a>
         </div>
-      </div>border-dashed border-gray-700 rounded-2xl p-4 text-center">
-          <div classNamfunction Reviews() {
+      </div>
+    </section>
+  )
+}
+
+// ==================== REVIEWS + FAQ ====================
+
+function Reviews() {
   const scrollRef = useRef(null)
   const [active, setActive] = useState(0)
 
@@ -400,38 +430,6 @@ function CatalogSection({ onDetails, onApply }) {
   )
 }
 
-function FAQnd justify-between mb-4">
-        <SectionTitle title="What our drivers say" subtitle="Real stories from Bogotá" />
-        <div className="flex gap-2 pb-1">
-          <button onClick={() => scroll(-1)} className="w-9 h-9 rounded-full bg-[#111820] border border-gray-800 text-gray-400 font-bold">←</button>
-          <button onClick={() => scroll(1)} className="w-9 h-9 rounded-full bg-[#111820] border border-gray-800 text-gray-400 font-bold">→</button>
-        </div>
-      </div>
-
-      <div ref={scrollRef} className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
-        {reviews.map((review) => (
-          <div key={review.name} className="snap-start shrink-0 w-72 bg-[#111820] border border-gray-800 rounded-2xl p-4">
-         -3">
-              <div className="w-10 h-10 rounded-full bg-[#1A2230] text-[#C8F437] font-black flex items-center justify-center">
-                {review.name[0]}
-              </div>
-              <div>
-                <div className="text-white font-bold text-sm">{review.name}</div>
-                <div className="text-gray-500 text-xs">{review.platform}</div>
-              </div>
-            </div>
-            <p className="text-gray-300 text-sm italic leading-relaxed">“{review.text}”</p>
-            <div className="text-yellow-400 text-xs mt-3">★★★★★</div>
-          </div>
-        ))}
-      </div>
-
-      <a
-        href="https://www.tiktok.com/@naran"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-4 flex items-center justify-center gap-2 w-full bg-[#111820] border border-gray-800 text-white font-bold text-sm py-3 rounded-xl"
-
 function FAQ() {
   return (
     <section className="px-5 py-6 border-t border-gray-800">
@@ -454,7 +452,7 @@ function MultiStepForm({ preselectedMotoId }) {
   const [step, setStep] = useState(1)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-    const [selectedMotoId, setSelectedMotoId] = useState(preselectedMotoId || '')
+  const [selectedMotoId, setSelectedMotoId] = useState(preselectedMotoId || '')
   const [term, setTerm] = useState(18)
   const [docs, setDocs] = useState({ idFront: false, idBack: false, license: false, utilityBill: false })
   const [ref1, setRef1] = useState({ name: '', phone: '' })
@@ -463,7 +461,6 @@ function MultiStepForm({ preselectedMotoId }) {
   const selectedMoto = useMemo(() => getMotoById(selectedMotoId), [selectedMotoId])
   const totalSteps = 4
   const progress = (step / totalSteps) * 100
-
   const uploadedDocs = Object.values(docs).filter(Boolean).length
 
   const canNext = () => {
@@ -511,10 +508,20 @@ function MultiStepForm({ preselectedMotoId }) {
           <div className="bg-[#C8F437] h-full transition-all duration-500" style={{ width: `${progress}%` }} />
         </div>
 
- <div className="bg-[#1A2230] rounded-xl px-4 py-3.5">
-                  <div className="text-xs text-gray-500 mb-1">City</div>
-                  <div className="text-white text-sm font-bold">Bogotá only</div>
-                </div>xt-gray-400 text-xs mb-4">We will contact you today</p>
+        <div className="px-4 pt-3 pb-1 flex justify-between items-center">
+          <span className="text-xs text-gray-500">Step {step} of {totalSteps}</span>
+          {step > 1 && step < 4 && (
+            <button onClick={() => setStep(step - 1)} className="text-xs text-gray-400 underline">
+              ← Back
+            </button>
+          )}
+        </div>
+
+        <div className="p-5 pt-2">
+          {step === 1 && (
+            <div>
+              <h3 className="font-black text-lg mb-1 text-white">Your info</h3>
+              <p className="text-gray-400 text-xs mb-4">We will contact you today</p>
               <div className="space-y-3">
                 <div>
                   <label className="text-xs text-gray-500 mb-1 block">Full name</label>
@@ -691,7 +698,7 @@ function MultiStepForm({ preselectedMotoId }) {
                 if (canNext()) setStep(step + 1)
               }}
               className={`w-full mt-5 font-black text-center py-4 rounded-xl text-base transition-all active:scale-95 ${
-                canNext() ? 'bg-[#C8F437] text-black' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                canNext() ? 'bg-[#FF4A4A] text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
               }`}
             >
               {step === 1 && 'Next →'}
@@ -711,9 +718,7 @@ function MultiStepForm({ preselectedMotoId }) {
 
 function MotoPage({ moto, onBack, onApply }) {
   const [term, setTerm] = useState(18)
-  const [depositPlan, setDepositPlan] = useState('split')
   const price = getWeeklyPrice(moto, term)
-  const depositSplit = Math.round(moto.deposit / 2)
   const waMsg = `Hi! I want the ${moto.name} ${moto.year} for ${term} months.`
   const waURL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`
 
@@ -736,17 +741,27 @@ function MotoPage({ moto, onBack, onApply }) {
         </div>
         <h1 className="text-white text-2xl font-black">{moto.name}</h1>
 
+        <ApplyButton onClick={() => onApply(moto.id)} className="w-full mt-4 py-4 text-base">
+          Apply now →
+        </ApplyButton>
+
         <div className="mt-5 bg-[#111820] rounded-2xl p-4 border border-gray-800">
           <div className="text-xs text-gray-500 mb-2">Weekly payment</div>
           <div className="text-[#C8F437] text-4xl font-black">{fmt(price)}</div>
           <div className="text-gray-500 text-xs mt-1">/ week · {term} months</div>
+          <div className="mt-3 pt-3 border-t border-gray-800">
+            <div className="text-gray-400 text-sm font-bold">Initial payment from {fmt(moto.deposit)}</div>
+            <div className="text-gray-500 text-xs mt-1">Can be paid weekly during the first month</div>
+          </div>
         </div>
 
         <div className="mt-5">
           <div className="text-xs text-gray-500 mb-2">Plan</div>
           <div className="grid grid-cols-2 gap-2">
-   <p className="text-gray-500 text-xs mt-2">Flexible deposit — choose what works for you.</p>
-          <p className="text-gray-500 text-xs mt-1">Initial payment from {fmt(moto.deposit)}</p>   onClick={() => setTerm(p)}
+            {[18, 12].map((p) => (
+              <button
+                key={p}
+                onClick={() => setTerm(p)}
                 className={`py-3 rounded-xl text-sm font-bold transition-all ${term === p ? 'bg-[#C8F437] text-black' : 'bg-[#111820] text-gray-400'}`}
               >
                 {p} months
@@ -755,36 +770,14 @@ function MotoPage({ moto, onBack, onApply }) {
           </div>
         </div>
 
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-xs text-gray-500">Initial payment</div>
-            <div className="text-xs text-gray-500">From {fmt(moto.deposit)}</div>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => setDepositPlan('full')}
-              className={`py-3 rounded-xl text-sm font-bold transition-all ${depositPlan === 'full' ? 'bg-[#C8F437] text-black' : 'bg-[#111820] text-gray-400'}`}
-            >
-              Pay in full
-            </button>
-            <button
-              onClick={() => setDepositPlan('split')}
-              className={`py-3 rounded-xl text-sm font-bold transition-all ${depositPlan === 'split' ? 'bg-[#C8F437] text-black' : 'bg-[#111820] text-gray-400'}`}
-            >
-              2 × {fmt(depositSplit)}
-            </button>
-          </div>
-          <p className="text-gray-500 text-xs mt-2">Flexible deposit — choose what works for you.</p>
-        </div>
-
         <div className="mt-6">
           <EarningsCalculator moto={moto} term={term} compact />
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-3">
-          <button onClick={() => onApply(moto.id)} className="bg-[#C8F437] text-black font-black py-4 rounded-xl active:scale-95 transition">
+          <ApplyButton onClick={() => onApply(moto.id)} className="py-4 text-base">
             Apply for this moto
-          </button>
+          </ApplyButton>
           <a href={waURL} target="_blank" rel="noopener noreferrer" className="text-center text-gray-400 text-sm underline">
             or message us on WhatsApp
           </a>
@@ -862,9 +855,9 @@ export default function App() {
           <Footer />
 
           <div className="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-[#0B1118]/95 border-t border-gray-800 p-3 backdrop-blur">
-            <button onClick={() => scrollToForm('')} className="w-full bg-[#C8F437] text-black font-black py-3.5 rounded-xl active:scale-95 transition">
+            <ApplyButton onClick={() => scrollToForm('')} className="w-full py-3.5">
               Apply now
-            </button>
+            </ApplyButton>
           </div>
         </>
       )}
