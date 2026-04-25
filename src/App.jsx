@@ -339,7 +339,12 @@ function MotoCard({ moto, onDetails, onApply }) {
             {fmt(moto.price18)}
             <span className="text-gray-500 text-xs font-normal"> /week</span>
           </p>
-          <p className="text-gray-500 text-xs mt-0.5">Deposit from {fmt(moto.deposit)}</p>
+         <p className="text-gray-500 text-xs mt-0.5">
+Deposit {fmt(moto.deposit)}
+</p>
+<p className="text-gray-500 text-xs">
+Can be paid weekly in the first month
+</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2 mt-4">
@@ -614,8 +619,11 @@ function MultiStepForm({ preselectedMotoId }) {
                         {moto.condition} · {moto.year}
                       </div>
                       <div className="text-xs text-gray-500 mt-0.5">
-                        Deposit from {fmt(moto.deposit)}
-                      </div>
+Deposit {fmt(moto.deposit)}
+</div>
+<div className="text-xs text-gray-500">
+Can be paid weekly in the first month
+</div>
                     </div>
                     <div className="text-right">
                       <div className="text-[#C8F437] font-black text-sm">{fmt(moto.price18)}</div>
@@ -649,6 +657,29 @@ function MultiStepForm({ preselectedMotoId }) {
           {step === 3 && (
             <div>
               <h3 className="font-black text-lg mb-1 text-white">Upload documents</h3>
+<div className="bg-[#1A2230] rounded-xl p-4 mb-4">
+<div className="text-white font-bold text-sm mb-1">
+Initial payment
+</div>
+
+<div className="text-[#C8F437] font-black text-lg mb-3">
+{selectedMoto ? fmt(selectedMoto.deposit) : ''}
+</div>
+
+<div className="grid grid-cols-2 gap-2">
+<button
+className="bg-[#C8F437] text-black font-bold py-2 rounded-xl text-sm"
+>
+Pay in full
+</button>
+
+<button
+className="bg-[#111820] text-white font-bold py-2 rounded-xl text-sm border border-gray-700"
+>
+Pay weekly (1st month)
+</button>
+</div>
+</div>
               <p className="text-gray-400 text-xs mb-4">Required to get approved. Take a clear photo.</p>
               <div className="space-y-3">
                 <DocUploadBox label="ID — front side" docKey="idFront" icon="🪪" />
@@ -922,3 +953,5 @@ export default function App() {
     </div>
   )
 }
+
+
