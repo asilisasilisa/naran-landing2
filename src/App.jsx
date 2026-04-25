@@ -10,7 +10,7 @@ const motos = [
     condition: 'New',
     deposit: 500000,
     price12: 200000,
-    price18: 160000,
+    price18: 155000,
     specs: { cc: '97.2 cc', motor: '4 Stroke', hp: '8.2 HP', tank: '9.1 L' },
   },
   {
@@ -30,18 +30,18 @@ const motos = [
     condition: 'New',
     deposit: 600000,
     price12: 240000,
-    price18: 200000,
+    price18: 180000,
     specs: { cc: '97.2 cc', motor: '4 Stroke', hp: '8.2 HP', tank: '9.5 L' },
   },
   {
-    id: 'hero-splendor-xpro',
-    name: 'Hero Splendor XPro',
-    year: 2027,
-    condition: 'New',
-    deposit: 600000,
-    price12: 250000,
-    price18: 205000,
-    specs: { cc: '109.15 cc', motor: '4 Stroke', hp: '9.1 HP', tank: '9.5 L' },
+    id: 'victory-combat',
+    name: 'Victory Combat',
+    year: 2025,
+    condition: 'Used',
+    deposit: 400000,
+    price12: 140000,
+    price18: 110000,
+    specs: { cc: '109 cc', motor: '4 Stroke', hp: '8.5 HP', tank: '9 L' },
   },
 ]
 
@@ -70,7 +70,7 @@ const faqs = [
   },
   {
     q: 'Do I need a deposit?',
-    a: "Yes! But it's flexible — from $500.000 COP. Pay in full or split into weekly payments within 1 month.",
+    a: "Yes! But it's flexible — from $400.000 COP. Pay in full or split into weekly payments within 1 month.",
   },
   {
     q: 'Can I work on any platform?',
@@ -89,6 +89,7 @@ const fmt = (n) => '$' + Math.round(n).toLocaleString('es-CO')
 const HOURLY_RATE = 24000
 const COMMISSION_PCT = 0.104
 const GAS_PCT = 0.074
+const WA_NUMBER = '573001234567'
 
 // ==================== HEADER ====================
 
@@ -159,7 +160,7 @@ function AdvantagesSection() {
   const items = [
     { icon: '🚀', title: 'Approved in 24h', desc: 'Reserve, we check docs, you ride' },
     { icon: '📄', title: 'Only 4 documents', desc: 'ID · License · Utility bill · Reference' },
-    { icon: '💰', title: 'Flexible deposit', desc: 'From $500K — pay full or weekly within 1 month' },
+    { icon: '💰', title: 'Flexible deposit', desc: 'From $400K — pay full or weekly within 1 month' },
     { icon: '🛡️', title: 'Everything included', desc: 'SOAT + GPS + 24/7 support' },
   ]
 
@@ -186,7 +187,7 @@ function AdvantagesSection() {
 function ProcessSection() {
   const steps = [
     { icon: '🏍️', label: 'Choose', sub: 'your moto' },
-    { icon: '📄', label: 'Upload', sub: 'your docs now' },
+    { icon: '📄', label: 'Upload', sub: 'your docs' },
     { icon: '✍️', label: 'Sign', sub: 'at our office' },
     { icon: '🔑', label: 'Ride', sub: 'out!' },
   ]
@@ -266,393 +267,359 @@ function FAQSection() {
   )
 }
 
-// ==================== FORM ====================
+// ==================== MULTI-STEP FORM ====================
 
-function FormSection() {
+function MultiStepForm({ initialMoto }) {
+  const [step, setStep] = useState(initialMoto ? 2 : 1)
   const [form, setForm] = useState({
     name: '',
     phone: '',
-    moto: '',
+    city: 'Bogotá',
+    motoId: initialMoto || '',
     term: '18',
+    docs: { cedula: null, license: null, utility: null, reference: null },
   })
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const msg = `Hola! Quiero aplicar:\n\nNombre: ${form.name}\nTeléfono: ${form.phone}\nCiudad: Bogotá\nMoto: ${form.moto}\nPlazo: ${form.term} meses`
-    window.open(`https://wa.me/573001234567?text=${encodeURIComponent(msg)}`)
+  const selectedMoto = motos.find((m) => m.id === form.motoId)
+  const price = selectedMoto
+    ? form.term === '18'
+      ? selectedMoto.price18
+      : selectedMoto.price12
+    : 0
+
+  const setDoc = (key, file) =>
+    setForm({ ...form, docs: { ...form.docs, [key]: file } })
+
+  const docsReady =
+    form.docs.cedula && form.docs.license && form.docs.utility && form.docs.reference
+
+  const handleSubmit = () => {
+    const msg = `Hola! Quiero aplicar:\n\nNombre: ${form.name}\nTeléfono: ${form.phone}\nCiudad: ${form.city}\nMoto: ${selectedMoto?.name}\nPlazo: ${form.term} meses\nPago semanal: ${fmt(price)}\nDepósito: ${fmt(selectedMoto?.deposit || 0)}\n\nDocs: uploaded ✅`
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`)
   }
 
   return (
     <section className="px-4 py-8">
-      <h2 className="text-white text-xl font-bold mb-1">Apply now</h2>
-      <p className="text-gray-400 text-sm mb-4">Get your moto in 24h</p>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="text"
-          placeholder="Full name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          className="w-full bg-[#111820] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
-          required
-        />
-        <input
-          type="tel"
-          placeholder="Phone number"
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          className="w-full bg-[#111820] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
-          required
-        />
-        <div className="bg-[#111820] border border-gray-800 text-gray-400 rounded-xl px-4 py-3 text-sm">
-          📍 Bogotá
-        </div>
-        <select
-          value={form.moto}
-          onChange={(e) => setForm({ ...form, moto: e.target.value })}
-          className="w-full bg-[#111820] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm focus:border-[#C8F437] outline-none"
-          required
-        >
-          <option value="">Select a moto</option>
-          {motos.map((m) => (
-            <option key={m.id} value={m.name}>
-              {m.name} — {fmt(m.price18)}/wk
-            </option>
-          ))}
-        </select>
-        <div className="flex gap-2">
-          {['18', '12'].map((t) => (
+      {/* Card wrapper */}
+      <div className="bg-[#0D1117] border border-[#C8F437]/30 rounded-2xl p-5">
+        {/* Progress */}
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-gray-500 text-sm">Step {step} of 4</span>
+          {step > 1 && (
             <button
-              key={t}
-              type="button"
-              onClick={() => setForm({ ...form, term: t })}
-              className={`flex-1 py-3 rounded-xl font-bold text-sm transition ${
-                form.term === t
-                  ? 'bg-[#C8F437] text-black'
-                  : 'bg-[#111820] border border-gray-800 text-gray-500'
-              }`}
+              onClick={() => setStep(step - 1)}
+              className="text-gray-500 text-sm hover:text-white transition"
             >
-              {t} months
+              ← Back
             </button>
-          ))}
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg hover:bg-[#d4f94d] transition"
-        >
-          Apply now →
-        </button>
-      </form>
-    </section>
-  )
-}
-
-// ==================== FOOTER ====================
-
-function Footer() {
-  return (
-    <footer className="px-4 py-8 border-t border-gray-800/50">
-      <div className="text-center">
-        <p className="text-white font-black text-2xl mb-2">naran.</p>
-        <p className="text-gray-600 text-xs">© 2025 naran. All rights reserved.</p>
-      </div>
-    </footer>
-  )
-}
-
-// ==================== MOTO PAGE ====================
-
-function MotoPage({ moto, goHome }) {
-  const [term, setTerm] = useState('18')
-  const [showCalc, setShowCalc] = useState(false)
-  const [hours, setHours] = useState(8)
-  const [days, setDays] = useState(6)
-
-  const price = term === '18' ? moto.price18 : moto.price12
-
-  const defaultGross = 8 * 6 * HOURLY_RATE
-  const defaultCommission = defaultGross * COMMISSION_PCT
-  const defaultGas = defaultGross * GAS_PCT
-  const defaultNet = defaultGross - price - defaultCommission - defaultGas
-
-  const gross = hours * days * HOURLY_RATE
-  const commission = gross * COMMISSION_PCT
-  const gas = gross * GAS_PCT
-  const net = gross - price - commission - gas
-  const monthly = net * 4.33
-
-  return (
-    <div className="min-h-screen bg-[#070B10]">
-      <Header goHome={goHome} />
-
-      <div className="px-4 py-4">
-        <button
-          onClick={goHome}
-          className="text-gray-500 text-sm mb-4 flex items-center gap-1 hover:text-gray-300 transition"
-        >
-          ← All motos
-        </button>
-
-        <div className="bg-[#1A2230] rounded-2xl h-52 flex items-center justify-center mb-4">
-          <span className="text-7xl">🏍️</span>
+          )}
         </div>
 
-        <div className="flex items-center gap-2 mb-1">
-          <span className="bg-[#C8F437] text-black text-xs font-bold px-2 py-0.5 rounded-full">
-            {moto.condition}
-          </span>
-          <span className="text-gray-500 text-sm">{moto.year}</span>
-        </div>
-        <h1 className="text-white text-3xl font-bold mb-5">{moto.name}</h1>
-
-        {/* Specs */}
-        <div className="grid grid-cols-4 gap-2 mb-6">
-          {[
-            { label: 'Engine', value: moto.specs.cc },
-            { label: 'Motor', value: moto.specs.motor },
-            { label: 'Power', value: moto.specs.hp },
-            { label: 'Tank', value: moto.specs.tank },
-          ].map((s, i) => (
+        {/* Step bar */}
+        <div className="flex gap-1 mb-6">
+          {[1, 2, 3, 4].map((s) => (
             <div
-              key={i}
-              className="bg-[#111820] border border-gray-800 rounded-xl p-3 text-center"
-            >
-              <p className="text-gray-500 text-[10px] uppercase">{s.label}</p>
-              <p className="text-white font-bold text-xs mt-1">{s.value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Term */}
-        <p className="text-gray-500 text-sm mb-2">Term</p>
-        <div className="flex gap-2 mb-3">
-          {['18', '12'].map((t) => (
-            <button
-              key={t}
-              onClick={() => setTerm(t)}
-              className={`flex-1 py-3 rounded-xl font-bold text-sm transition ${
-                term === t
-                  ? 'bg-[#C8F437] text-black'
-                  : 'bg-[#111820] border border-gray-800 text-gray-500'
+              key={s}
+              className={`h-1 flex-1 rounded-full transition-all ${
+                s <= step ? 'bg-[#C8F437]' : 'bg-gray-800'
               }`}
-            >
-              {t} months
-            </button>
+            />
           ))}
         </div>
 
-        {/* Deposit */}
-        <p className="text-gray-500 text-sm mb-6">
-          Deposit: {fmt(moto.deposit)} · Pay full or weekly within 1 month
-        </p>
+        {/* ===== STEP 1: Personal info ===== */}
+        {step === 1 && (
+          <div>
+            <h2 className="text-white font-bold text-xl mb-1">Let's get started</h2>
+            <p className="text-gray-400 text-sm mb-5">Tell us about yourself</p>
 
-        {/* Payment + Earnings */}
-        <div className="bg-[#111820] border border-gray-800 rounded-2xl p-5 mb-3">
-          <p className="text-gray-500 text-sm">Your weekly payment</p>
-          <div className="flex items-end justify-between mb-4">
-            <p className="text-[#C8F437] font-bold text-4xl">{fmt(price)}</p>
-            <p className="text-gray-500 text-sm">for {term} months</p>
-          </div>
-
-          <hr className="border-gray-800 mb-4" />
-
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Delivery earnings (8h/day, 6 days)</span>
-              <span className="text-[#C8F437]">{fmt(defaultGross)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">🏍️ Moto payment</span>
-              <span className="text-red-400">−{fmt(price)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">📱 Platform commission</span>
-              <span className="text-red-400">−{fmt(defaultCommission)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">⛽ Gas</span>
-              <span className="text-red-400">−{fmt(defaultGas)}</span>
-            </div>
-          </div>
-
-          <hr className="border-gray-800 my-4" />
-
-          <div className="flex justify-between items-center">
-            <span className="text-white font-bold">You keep each week</span>
-            <span className="text-green-400 font-bold text-xl">{fmt(defaultNet)} ✅</span>
-          </div>
-
-          <p className="text-gray-600 text-[11px] mt-3">
-            *Estimated earnings. Actual results may vary by platform and zone.
-          </p>
-        </div>
-
-        {/* Calculator toggle */}
-        <button
-          onClick={() => setShowCalc(!showCalc)}
-          className="w-full text-center text-[#C8F437] text-sm py-2 mb-4"
-        >
-          {showCalc ? 'Close calculator' : 'Work more or fewer hours? Calculate exactly →'}
-        </button>
-
-        {/* Calculator */}
-        {showCalc && (
-          <div className="bg-[#111820] border border-gray-800 rounded-2xl p-5 mb-6">
-            <div className="mb-5">
-              <div className="flex justify-between mb-2">
-                <span className="text-gray-400 text-sm">Hours/day</span>
-                <span className="text-white font-bold">{hours}h</span>
-              </div>
+            <div className="space-y-3">
               <input
-                type="range"
-                min="4"
-                max="12"
-                value={hours}
-                onChange={(e) => setHours(Number(e.target.value))}
-                className="w-full"
+                type="text"
+                placeholder="Full name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full bg-[#111820] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
               />
-              <div className="flex justify-between text-xs text-gray-600 mt-1">
-                <span>4h</span>
-                <span>12h</span>
-              </div>
-            </div>
-
-            <div className="mb-5">
-              <div className="flex justify-between mb-2">
-                <span className="text-gray-400 text-sm">Days/week</span>
-                <span className="text-white font-bold">{days}</span>
-              </div>
               <input
-                type="range"
-                min="3"
-                max="7"
-                value={days}
-                onChange={(e) => setDays(Number(e.target.value))}
-                className="w-full"
+                type="tel"
+                placeholder="Phone number"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                className="w-full bg-[#111820] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
               />
-              <div className="flex justify-between text-xs text-gray-600 mt-1">
-                <span>3</span>
-                <span>7</span>
+              <div className="bg-[#111820] border border-gray-800 text-gray-400 rounded-xl px-4 py-3 text-sm">
+                📍 Bogotá
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Gross earnings</span>
-                <span className="text-[#C8F437]">{fmt(gross)}/wk</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">🏍️ Moto payment</span>
-                <span className="text-red-400">−{fmt(price)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">📱 Platform commission</span>
-                <span className="text-red-400">−{fmt(commission)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">⛽ Gas</span>
-                <span className="text-red-400">−{fmt(gas)}</span>
-              </div>
-              <hr className="border-gray-800" />
-              <div className="flex justify-between font-bold">
-                <span className="text-white">You keep</span>
-                <span className={net > 0 ? 'text-green-400' : 'text-red-400'}>
-                  {fmt(net)}/wk
-                </span>
-              </div>
-              <p className="text-center text-[#C8F437] font-bold text-xl mt-2">
-                {fmt(monthly)}/month
-              </p>
+            <button
+              onClick={() => {
+                if (form.name && form.phone) setStep(2)
+              }}
+              disabled={!form.name || !form.phone}
+              className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg mt-5 hover:bg-[#d4f94d] transition disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Continue →
+            </button>
+          </div>
+        )}
+
+        {/* ===== STEP 2: Choose moto ===== */}
+        {step === 2 && (
+          <div>
+            <h2 className="text-white font-bold text-xl mb-1">Choose your moto</h2>
+            <p className="text-gray-400 text-sm mb-5">Which one do you want to ride?</p>
+
+            {/* Moto list */}
+            <div className="space-y-2 mb-5">
+              {motos.map((m) => {
+                const isSelected = form.motoId === m.id
+                const mPrice = form.term === '18' ? m.price18 : m.price12
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => setForm({ ...form, motoId: m.id })}
+                    className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                      isSelected
+                        ? 'bg-[#111820] border-[#C8F437]'
+                        : 'bg-[#111820] border-gray-800 hover:border-gray-600'
+                    }`}
+                  >
+                    <div className="w-12 h-12 bg-[#1A2230] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">🏍️</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-bold text-sm">{m.name}</p>
+                      <p className="text-gray-500 text-xs">
+                        {m.condition} · {m.year}
+                      </p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-[#C8F437] font-bold">{fmt(mPrice)}</p>
+                      <p className="text-gray-600 text-xs">/wk</p>
+                    </div>
+                  </button>
+                )
+              })}
             </div>
 
-            <p className="text-gray-600 text-[11px] mt-3 text-center">
-              *Estimated earnings. Actual results may vary by platform and zone.
+            {/* Term selector */}
+            {selectedMoto && (
+              <>
+                <p className="text-gray-500 text-sm mb-2">Term</p>
+                <div className="flex gap-2 mb-4">
+                  {['18', '12'].map((t) => {
+                    const p = t === '18' ? selectedMoto.price18 : selectedMoto.price12
+                    return (
+                      <button
+                        key={t}
+                        onClick={() => setForm({ ...form, term: t })}
+                        className={`flex-1 py-3 rounded-xl font-bold text-sm transition ${
+                          form.term === t
+                            ? 'bg-[#C8F437] text-black'
+                            : 'bg-[#111820] border border-gray-800 text-gray-500'
+                        }`}
+                      >
+                        {t} months · {fmt(p)}/wk
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* ✅ DEPOSIT INFO */}
+                <div className="bg-[#111820] border border-gray-800 rounded-xl p-4 mb-5">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-400 text-sm">Deposit</span>
+                    <span className="text-[#C8F437] font-bold text-lg">
+                      {fmt(selectedMoto.deposit)}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-sm mt-0.5">💡</span>
+                    <p className="text-gray-500 text-xs leading-relaxed">
+                      Pay in full or split into{' '}
+                      <span className="text-gray-300 font-medium">
+                        weekly payments within 1 month
+                      </span>
+                      . The deposit reserves your moto and is{' '}
+                      <span className="text-gray-300 font-medium">non-refundable</span>.
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <button
+              onClick={() => {
+                if (form.motoId) setStep(3)
+              }}
+              disabled={!form.motoId}
+              className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg hover:bg-[#d4f94d] transition disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Continue with {selectedMoto?.name || '...'} →
+            </button>
+
+            <p className="text-gray-600 text-xs text-center mt-3">
+              No commitment · No co-signer needed
             </p>
           </div>
         )}
 
-        {/* Apply form */}
-        <div className="bg-[#111820] border border-gray-800 rounded-2xl p-5 mb-8">
-          <h2 className="text-white font-bold text-lg mb-4">Apply for this moto</h2>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              const n = e.target.elements.fullname.value
-              const p = e.target.elements.phone.value
-              const msg = `Hola! Quiero aplicar:\n\nNombre: ${n}\nTeléfono: ${p}\nCiudad: Bogotá\nMoto: ${moto.name}\nPlazo: ${term} meses`
-              window.open(
-                `https://wa.me/573001234567?text=${encodeURIComponent(msg)}`
-              )
-            }}
-            className="space-y-3"
-          >
-            <input
-              name="fullname"
-              type="text"
-              placeholder="Full name"
-              className="w-full bg-[#070B10] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
-              required
-            />
-            <input
-              name="phone"
-              type="tel"
-              placeholder="Phone number"
-              className="w-full bg-[#070B10] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
-              required
-            />
+        {/* ===== STEP 3: Upload docs ===== */}
+        {step === 3 && (
+          <div>
+            <h2 className="text-white font-bold text-xl mb-1">Upload your documents</h2>
+            <p className="text-gray-400 text-sm mb-5">
+              Take a clear photo of each document
+            </p>
+
+            <div className="space-y-3">
+              {[
+                { key: 'cedula', label: 'Cédula (ID)', icon: '🪪', desc: 'Front and back' },
+                { key: 'license', label: 'Driver's license', icon: '🏍️', desc: 'Category A2' },
+                {
+                  key: 'utility',
+                  label: 'Utility bill',
+                  icon: '🏠',
+                  desc: 'Last 3 months',
+                },
+                {
+                  key: 'reference',
+                  label: 'Personal reference',
+                  icon: '👤',
+                  desc: 'Name & phone of a contact',
+                },
+              ].map((doc) => {
+                const file = form.docs[doc.key]
+                return (
+                  <label
+                    key={doc.key}
+                    className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+                      file
+                        ? 'bg-[#111820] border-[#C8F437]/50'
+                        : 'bg-[#111820] border-gray-800 hover:border-gray-600'
+                    }`}
+                  >
+                    <span className="text-2xl">{doc.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium text-sm">{doc.label}</p>
+                      <p className="text-gray-500 text-xs">
+                        {file ? `✅ ${file.name}` : doc.desc}
+                      </p>
+                    </div>
+                    <div
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold ${
+                        file
+                          ? 'bg-[#C8F437]/20 text-[#C8F437]'
+                          : 'bg-gray-800 text-gray-400'
+                      }`}
+                    >
+                      {file ? 'Change' : 'Upload'}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*,.pdf"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files[0]) setDoc(doc.key, e.target.files[0])
+                      }}
+                    />
+                  </label>
+                )
+              })}
+            </div>
+
+            <div className="mt-5 bg-[#111820] border border-gray-800 rounded-xl p-3">
+              <p className="text-gray-500 text-xs text-center">
+                📷 Photos must be clear and legible. Accepted: JPG, PNG, PDF
+              </p>
+            </div>
+
             <button
-              type="submit"
-              className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg hover:bg-[#d4f94d] transition"
+              onClick={() => {
+                if (docsReady) setStep(4)
+              }}
+              disabled={!docsReady}
+              className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg mt-5 hover:bg-[#d4f94d] transition disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Apply now →
+              Continue →
             </button>
-          </form>
-        </div>
-      </div>
 
-      <Footer />
-    </div>
-  )
-}
+            <button
+              onClick={() => setStep(4)}
+              className="w-full text-gray-600 text-sm mt-3 py-2 hover:text-gray-400 transition"
+            >
+              Skip for now — upload later
+            </button>
+          </div>
+        )}
 
-// ==================== PAGES ====================
+        {/* ===== STEP 4: Review & Submit ===== */}
+        {step === 4 && (
+          <div>
+            <h2 className="text-white font-bold text-xl mb-1">Review & apply</h2>
+            <p className="text-gray-400 text-sm mb-5">
+              Make sure everything looks good
+            </p>
 
-function HomePage({ openMoto }) {
-  return (
-    <div className="min-h-screen bg-[#070B10]">
-      <Header goHome={() => window.scrollTo(0, 0)} />
-      <CatalogSection openMoto={openMoto} />
-      <AdvantagesSection />
-      <ProcessSection />
-      <ReviewsSection />
-      <FAQSection />
-      <FormSection />
-      <Footer />
-    </div>
-  )
-}
+            <div className="space-y-3">
+              {/* Personal */}
+              <div className="bg-[#111820] border border-gray-800 rounded-xl p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-gray-500 text-xs uppercase tracking-wide">You</p>
+                  <button
+                    onClick={() => setStep(1)}
+                    className="text-[#C8F437] text-xs"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <p className="text-white font-bold text-sm">{form.name}</p>
+                <p className="text-gray-400 text-sm">{form.phone}</p>
+                <p className="text-gray-400 text-sm">📍 {form.city}</p>
+              </div>
 
-// ==================== APP ====================
+              {/* Moto */}
+              <div className="bg-[#111820] border border-gray-800 rounded-xl p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-gray-500 text-xs uppercase tracking-wide">Moto</p>
+                  <button
+                    onClick={() => setStep(2)}
+                    className="text-[#C8F437] text-xs"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <p className="text-white font-bold text-sm">{selectedMoto?.name}</p>
+                <div className="flex justify-between mt-1">
+                  <p className="text-gray-400 text-sm">{form.term} months</p>
+                  <p className="text-[#C8F437] font-bold">{fmt(price)}/wk</p>
+                </div>
+                <div className="flex justify-between mt-1">
+                  <p className="text-gray-400 text-sm">Deposit</p>
+                  <p className="text-white font-medium">{fmt(selectedMoto?.deposit || 0)}</p>
+                </div>
+              </div>
 
-export default function App() {
-  const [page, setPage] = useState('home')
-  const [selectedMotoId, setSelectedMotoId] = useState(null)
-
-  const openMoto = (id) => {
-    setSelectedMotoId(id)
-    setPage('moto')
-    window.scrollTo(0, 0)
-  }
-
-  const goHome = () => {
-    setPage('home')
-    window.scrollTo(0, 0)
-  }
-
-  if (page === 'moto') {
-    const moto = motos.find((m) => m.id === selectedMotoId)
-    if (!moto) { goHome(); return null }
-    return <MotoPage moto={moto} goHome={goHome} />
-  }
-
-  return <HomePage openMoto={openMoto} />
-}
+              {/* Docs */}
+              <div className="bg-[#111820] border border-gray-800 rounded-xl p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-gray-500 text-xs uppercase tracking-wide">Documents</p>
+                  <button
+                    onClick={() => setStep(3)}
+                    className="text-[#C8F437] text-xs"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { key: 'cedula', label: 'Cédula' },
+                    { key: 'license', label: 'License' },
+                    { key: 'utility', label: 'Utility bill' },
+                    { key: 'reference', label: 'Reference' },
+                  ].map((d) => (
+                    <div key={d.key} className="flex items-center gap-1.5">
+                      <span className={form.docs[d.key] ? 'text-green-400' : 'text-gray-600'}>
+                        {f
