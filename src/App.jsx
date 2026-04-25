@@ -3,91 +3,25 @@ import { useMemo, useRef, useState } from 'react'
 // ==================== DATA ====================
 
 const motos = [
-  {
-    id: 'hero-eco-t',
-    name: 'Hero Eco T',
-    year: 2027,
-    condition: 'New',
-    deposit: 500000,
-    price12: 200000,
-    price18: 155000,
-    img: '🏍️',
-  },
-  {
-    id: 'akt-nkd-125',
-    name: 'AKT NKD 125',
-    year: 2027,
-    condition: 'New',
-    deposit: 500000,
-    price12: 200000,
-    price18: 160000,
-    img: '🏍️',
-  },
-  {
-    id: 'hero-eco-deluxe',
-    name: 'Hero Eco Deluxe',
-    year: 2027,
-    condition: 'New',
-    deposit: 600000,
-    price12: 240000,
-    price18: 180000,
-    img: '🏍️',
-  },
-  {
-    id: 'victory-combat',
-    name: 'Victory Combat',
-    year: 2025,
-    condition: 'Used',
-    deposit: 400000,
-    price12: 140000,
-    price18: 110000,
-    img: '🏍️',
-  },
+  { id: 'hero-eco-t', name: 'Hero Eco T', year: 2027, condition: 'New', deposit: 500000, price12: 200000, price18: 155000, img: '🏍️' },
+  { id: 'akt-nkd-125', name: 'AKT NKD 125', year: 2027, condition: 'New', deposit: 500000, price12: 200000, price18: 160000, img: '🏍️' },
+  { id: 'hero-eco-deluxe', name: 'Hero Eco Deluxe', year: 2027, condition: 'New', deposit: 600000, price12: 240000, price18: 180000, img: '🏍️' },
+  { id: 'victory-combat', name: 'Victory Combat', year: 2025, condition: 'Used', deposit: 400000, price12: 140000, price18: 110000, img: '🏍️' },
 ]
 
 const reviews = [
-  {
-    name: 'Juan G.',
-    platform: 'Rappi · 8 months with naran',
-    text: "I couldn't afford a moto. With naran I started working fast. 8 months in, everything's good — paying little by little.",
-  },
-  {
-    name: 'José R.',
-    platform: 'Rappi + DiDi · 5 months with naran',
-    text: "No bank, no hassle. Got my moto fast and I'm already earning. Pretty simple.",
-  },
-  {
-    name: 'Camilo L.',
-    platform: 'Rappi + Yango · 11 months with naran',
-    text: "Had doubts at first, but it's worked out. I work at my own pace and I'm almost done paying off the moto.",
-  },
+  { name: 'Juan G.', platform: 'Rappi · 8 months with naran', text: "I couldn't afford a moto. With naran I started working fast. 8 months in, everything's good — paying little by little." },
+  { name: 'José R.', platform: 'Rappi + DiDi · 5 months with naran', text: "No bank, no hassle. Got my moto fast and I'm already earning. Pretty simple." },
+  { name: 'Camilo L.', platform: 'Rappi + Yango · 11 months with naran', text: "Had doubts at first, but it's worked out. I work at my own pace and I'm almost done paying off the moto." },
 ]
 
 const faqs = [
-  {
-    q: 'How fast can I start?',
-    a: 'Most drivers can start in 1–2 days. We review your documents in under 24 hours.',
-  },
-  {
-    q: 'Do I need a deposit?',
-    a: 'Yes. Initial payment starts from $400,000 COP and can be paid weekly during the first month.',
-  },
-  {
-    q: 'What do I need to apply?',
-    a: 'You need to be 18+. ID, driver’s license, utility bill and 2 references. No credit history needed.',
-  },
-  {
-    q: 'Can I work on any platform?',
-    a: 'Yes. Rappi, DiDi Food, Yango, or any delivery app. You choose where and when to work.',
-  },
-  {
-    q: 'What if the moto breaks down?',
-    a: 'Fuel and maintenance are paid by the driver. We are always here to help.',
-  },
-  {
-    q: 'Will the moto be mine?',
-    a: 'Yes. The moto is yours at the end of the contract after completing payments.',
-  },
+  { q: 'How fast can I start?', a: 'Most drivers can start in 1–2 days. We review your documents in under 24 hours.' },
+  { q: 'Do I need a deposit?', a: 'Yes. Initial payment starts from $400,000 COP and can be paid weekly during the first month.' },
+  { q: 'What do I need to apply?', a: 'You need to be 18+. ID, driver’s license, utility bill and 2 references. No credit history needed.' },
+  { q: 'Can I work on any platform?', a: 'Yes. Rappi, DiDi Food, Yango, or any delivery app. You choose where and when to work.' },
+  { q: 'What if the moto breaks down?', a: 'Fuel and maintenance are paid by the driver. We are always here to help.' },
+  { q: 'Will the moto be mine?', a: 'Yes. The moto is yours at the end of the contract after completing payments.' },
 ]
 
 // ==================== HELPERS ====================
@@ -95,7 +29,6 @@ const faqs = [
 const fmt = (n) => '$' + Math.round(n).toLocaleString('es-CO')
 const WA_NUMBER = '573001234567'
 const BRAND = '#C8F437'
-const RED = '#FF4A4A'
 
 function getMotoById(id) {
   return motos.find((moto) => moto.id === id) || null
@@ -106,20 +39,16 @@ function getWeeklyPrice(moto, term) {
   return term === 12 ? moto.price12 : moto.price18
 }
 
-// ==================== HEADER ====================
+// ==================== COMMON ====================
 
 function Header({ goHome }) {
   return (
     <header className="sticky top-0 z-50 bg-[#C8F437] px-5 py-3 flex items-center justify-between border-b border-black/10">
-      <button onClick={goHome} className="text-black font-black text-2xl tracking-tight">
-        naran.
-      </button>
+      <button onClick={goHome} className="text-black font-black text-2xl tracking-tight">naran.</button>
       <span className="text-black/60 text-sm font-bold">Bogotá</span>
     </header>
   )
 }
-
-// ==================== COMMON BLOCKS ====================
 
 function SectionTitle({ title, subtitle }) {
   return (
@@ -132,14 +61,13 @@ function SectionTitle({ title, subtitle }) {
 
 function ApplyButton({ children = 'Apply now →', onClick, className = '' }) {
   return (
-    <button
-      onClick={onClick}
-      className={`bg-[#FF4A4A] text-white font-black rounded-xl active:scale-95 transition shadow-lg shadow-red-950/20 ${className}`}
-    >
+    <button onClick={onClick} className={`bg-[#FF4A4A] text-white font-black rounded-xl active:scale-95 transition shadow-lg shadow-red-950/20 ${className}`}>
       {children}
     </button>
   )
 }
+
+// ==================== HERO ====================
 
 function Hero({ onApply, onSeeMotos, onSelectMoto }) {
   return (
@@ -148,22 +76,14 @@ function Hero({ onApply, onSeeMotos, onSelectMoto }) {
         <h1 className="text-4xl font-black leading-tight">Ride and earn.</h1>
         <p className="text-black/60 text-lg font-bold mt-2">Pay your moto while you work.</p>
         <div className="flex justify-center gap-4 text-sm text-black/60 mt-4">
-          <span>Approved in 24h</span>
-          <span>·</span>
-          <span>From $160K/week</span>
+          <span>Approved in 24h</span><span>·</span><span>From $160K/week</span>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mt-7 max-w-sm mx-auto">
         {motos.slice(0, 2).map((moto) => (
-          <button
-            key={moto.id}
-            onClick={() => onSelectMoto(moto)}
-            className="bg-white/80 rounded-2xl p-3 border border-black/10 text-left active:scale-95 transition"
-          >
-            <div className="bg-white rounded-xl h-24 flex items-center justify-center text-5xl mb-3">
-              {moto.img}
-            </div>
+          <button key={moto.id} onClick={() => onSelectMoto(moto)} className="bg-white/80 rounded-2xl p-3 border border-black/10 text-left active:scale-95 transition">
+            <div className="bg-white rounded-xl h-24 flex items-center justify-center text-5xl mb-3">{moto.img}</div>
             <div className="text-black/50 text-xs font-bold">{moto.condition} · {moto.year}</div>
             <div className="text-black text-sm font-black truncate mt-0.5">{moto.name}</div>
             <div className="text-black font-black text-lg mt-1">
@@ -174,9 +94,7 @@ function Hero({ onApply, onSeeMotos, onSelectMoto }) {
       </div>
 
       <div className="mt-6 max-w-sm mx-auto">
-        <ApplyButton onClick={onApply} className="w-full py-4 text-lg">
-          Apply now →
-        </ApplyButton>
+        <ApplyButton onClick={onApply} className="w-full py-4 text-lg">Apply now →</ApplyButton>
         <button onClick={onSeeMotos} className="w-full mt-3 bg-black/10 text-black font-black py-3 rounded-xl active:scale-95 transition">
           See available motos
         </button>
@@ -185,41 +103,17 @@ function Hero({ onApply, onSeeMotos, onSelectMoto }) {
   )
 }
 
-function Benefits() {
-  const items = [
-    ['🏍️', 'Ready-to-work moto'],
-    ['📋', 'SOAT included'],
-    ['📍', 'GPS installed'],
-    ['⚡', 'Fast delivery'],
-  ]
-
-  return (
-    <section className="px-5 py-6 border-t border-gray-800">
-      <SectionTitle title="What you get" />
-      <div className="grid grid-cols-2 gap-3">
-        {items.map(([icon, text]) => (
-          <div key={text} className="bg-[#111820] border border-gray-800 rounded-xl p-3 flex items-center gap-3">
-            <span className="text-xl">{icon}</span>
-            <span className="text-white text-sm font-bold">{text}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
+// ==================== BLOCKS ====================
 
 function ProcessBlock() {
   const steps = ['Choose your moto', 'Get approved (24h)', 'Sign at our Bogotá office and pick up your moto']
-
   return (
     <section className="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="How it works" />
       <div className="space-y-3">
         {steps.map((step, i) => (
           <div key={step} className="bg-[#111820] border border-gray-800 rounded-xl p-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#C8F437] text-black flex items-center justify-center font-black text-sm">
-              {i + 1}
-            </div>
+            <div className="w-8 h-8 rounded-full bg-[#C8F437] text-black flex items-center justify-center font-black text-sm">{i + 1}</div>
             <div className="text-white font-bold text-sm">{step}</div>
           </div>
         ))}
@@ -230,16 +124,11 @@ function ProcessBlock() {
 
 function RequirementsBlock() {
   const items = ['ID (18+)', 'Driver’s license', 'Utility bill', '2 references']
-
   return (
     <section className="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="What you need" />
       <div className="grid grid-cols-2 gap-2">
-        {items.map((item) => (
-          <div key={item} className="bg-[#111820] rounded-xl p-3 text-white text-sm font-bold">
-            ✅ {item}
-          </div>
-        ))}
+        {items.map((item) => <div key={item} className="bg-[#111820] rounded-xl p-3 text-white text-sm font-bold">✅ {item}</div>)}
       </div>
       <p className="text-center text-gray-500 text-xs mt-3">No credit history needed</p>
     </section>
@@ -249,7 +138,6 @@ function RequirementsBlock() {
 function EarningsCalculator({ moto, term = 18, compact = false }) {
   const [hours, setHours] = useState(6)
   const [days, setDays] = useState(5)
-
   const weeklyPayment = getWeeklyPrice(moto, term)
   const gross = hours * days * 24000
   const gasAndFees = Math.round(gross * 0.15)
@@ -259,51 +147,27 @@ function EarningsCalculator({ moto, term = 18, compact = false }) {
     <section className={compact ? '' : 'px-5 py-7 border-t border-gray-800'}>
       <div className="bg-white text-black rounded-3xl p-5 shadow-xl">
         <style>{`input[type=range]{-webkit-appearance:none;width:100%;height:7px;border-radius:999px;background:#E5E7EB;outline:none}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:${BRAND};cursor:pointer;border:4px solid white;box-shadow:0 0 0 3px ${BRAND}}`}</style>
-
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 rounded-xl bg-[#C8F437] flex items-center justify-center text-xl">▣</div>
-          <h2 className="text-black text-xl font-black leading-tight uppercase">
-            Your estimated earnings<br />per week
-          </h2>
+          <h2 className="text-black text-xl font-black leading-tight uppercase">Your estimated earnings<br />per week</h2>
         </div>
 
         <div className="mb-6">
-          <div className="flex justify-between text-lg mb-3">
-            <span className="text-gray-500 font-bold">Hours per day</span>
-            <span className="text-[#27441B] font-black">{hours} hours</span>
-          </div>
+          <div className="flex justify-between text-lg mb-3"><span className="text-gray-500 font-bold">Hours per day</span><span className="text-[#27441B] font-black">{hours} hours</span></div>
           <input type="range" min={4} max={12} value={hours} onChange={(e) => setHours(Number(e.target.value))} />
-          <div className="flex justify-between text-gray-400 text-sm mt-3">
-            <span>4h</span>
-            <span>12h</span>
-          </div>
+          <div className="flex justify-between text-gray-400 text-sm mt-3"><span>4h</span><span>12h</span></div>
         </div>
 
         <div className="border-t border-gray-200 pt-6 mb-6">
-          <div className="flex justify-between text-lg mb-3">
-            <span className="text-gray-500 font-bold">Days per week</span>
-            <span className="text-[#27441B] font-black">{days} days</span>
-          </div>
+          <div className="flex justify-between text-lg mb-3"><span className="text-gray-500 font-bold">Days per week</span><span className="text-[#27441B] font-black">{days} days</span></div>
           <input type="range" min={3} max={7} value={days} onChange={(e) => setDays(Number(e.target.value))} />
-          <div className="flex justify-between text-gray-400 text-sm mt-3">
-            <span>3 days</span>
-            <span>7 days</span>
-          </div>
+          <div className="flex justify-between text-gray-400 text-sm mt-3"><span>3 days</span><span>7 days</span></div>
         </div>
 
         <div className="space-y-3 text-lg">
-          <div className="flex justify-between">
-            <span className="text-gray-500 font-bold">You earn</span>
-            <span className="text-[#27441B] font-black">{fmt(gross)}</span>
-          </div>
-          <div className="flex justify-between bg-[#F4FAE9] border border-[#C8F437] rounded-xl p-3 -mx-1">
-            <span className="text-gray-500 font-bold">Moto payment</span>
-            <span className="text-gray-700 font-black">−{fmt(weeklyPayment)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500 font-bold">Gas + app fees</span>
-            <span className="text-gray-500 font-black">−{fmt(gasAndFees)}</span>
-          </div>
+          <div className="flex justify-between"><span className="text-gray-500 font-bold">You earn</span><span className="text-[#27441B] font-black">{fmt(gross)}</span></div>
+          <div className="flex justify-between bg-[#F4FAE9] border border-[#C8F437] rounded-xl p-3 -mx-1"><span className="text-gray-500 font-bold">Moto payment</span><span className="text-gray-700 font-black">−{fmt(weeklyPayment)}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500 font-bold">Gas + app fees</span><span className="text-gray-500 font-black">−{fmt(gasAndFees)}</span></div>
         </div>
 
         <div className="pt-5 mt-5 border-t border-[#DDF5A2] text-center">
@@ -322,38 +186,21 @@ function MotoCard({ moto, onDetails, onApply }) {
   return (
     <div className="bg-[#111820] border border-gray-800 rounded-2xl p-4">
       <div className="flex gap-4">
-        <button onClick={() => onDetails(moto)} className="bg-[#1A2230] rounded-xl w-24 h-24 shrink-0 flex items-center justify-center">
-          <span className="text-5xl">{moto.img}</span>
-        </button>
+        <button onClick={() => onDetails(moto)} className="bg-[#1A2230] rounded-xl w-24 h-24 shrink-0 flex items-center justify-center"><span className="text-5xl">{moto.img}</span></button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className={`${moto.condition === 'New' ? 'bg-[#C8F437]' : 'bg-yellow-400'} text-black text-xs font-bold px-2 py-0.5 rounded-full`}>
-              {moto.condition}
-            </span>
+            <span className={`${moto.condition === 'New' ? 'bg-[#C8F437]' : 'bg-yellow-400'} text-black text-xs font-bold px-2 py-0.5 rounded-full`}>{moto.condition}</span>
             <span className="text-gray-500 text-sm">{moto.year}</span>
           </div>
-          <button onClick={() => onDetails(moto)} className="text-left">
-            <h3 className="text-white font-bold text-base">{moto.name}</h3>
-          </button>
-          <p className="text-[#C8F437] font-black text-xl mt-1">
-            {fmt(moto.price18)}
-            <span className="text-gray-500 text-xs font-normal"> /week</span>
-          </p>
-         <p className="text-gray-500 text-xs mt-0.5">
-Deposit {fmt(moto.deposit)}
-</p>
-<p className="text-gray-500 text-xs">
-Can be paid weekly in the first month
-</p>
+          <button onClick={() => onDetails(moto)} className="text-left"><h3 className="text-white font-bold text-base">{moto.name}</h3></button>
+          <p className="text-[#C8F437] font-black text-xl mt-1">{fmt(moto.price18)}<span className="text-gray-500 text-xs font-normal"> /week</span></p>
+          <p className="text-gray-500 text-xs mt-0.5">Deposit {fmt(moto.deposit)}</p>
+          <p className="text-gray-500 text-xs leading-tight">Pay weekly in the first month</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2 mt-4">
-        <button onClick={() => onDetails(moto)} className="bg-[#1A2230] text-gray-300 font-bold text-sm py-2.5 rounded-xl">
-          Details
-        </button>
-        <ApplyButton onClick={() => onApply(moto.id)} className="text-sm py-2.5">
-          Apply now →
-        </ApplyButton>
+        <button onClick={() => onDetails(moto)} className="bg-[#1A2230] text-gray-300 font-bold text-sm py-2.5 rounded-xl">Details</button>
+        <ApplyButton onClick={() => onApply(moto.id)} className="text-sm py-2.5">Apply now →</ApplyButton>
       </div>
     </div>
   )
@@ -364,22 +211,12 @@ function CatalogSection({ onDetails, onApply }) {
     <section className="px-5 py-6 border-t border-gray-800" id="motos">
       <SectionTitle title="Available motos" subtitle="Choose the model that works for you" />
       <div className="space-y-3">
-        {motos.map((moto) => (
-          <MotoCard key={moto.id} moto={moto} onDetails={onDetails} onApply={onApply} />
-        ))}
-
+        {motos.map((moto) => <MotoCard key={moto.id} moto={moto} onDetails={onDetails} onApply={onApply} />)}
         <div className="bg-[#111820] border border-dashed border-gray-700 rounded-2xl p-4 text-center">
           <div className="text-3xl mb-2">❓</div>
           <h3 className="text-white font-black text-base">Don’t see the moto you want?</h3>
           <p className="text-gray-400 text-sm mt-1">Message us on WhatsApp. We may help you get another model.</p>
-          <a
-            href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi! I want a different moto model')}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex w-full justify-center bg-[#1A2230] text-white font-bold text-sm py-3 rounded-xl"
-          >
-            Message on WhatsApp
-          </a>
+          <a href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi! I want a different moto model')}`} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex w-full justify-center bg-[#1A2230] text-white font-bold text-sm py-3 rounded-xl">Message on WhatsApp</a>
         </div>
       </div>
     </section>
@@ -391,7 +228,6 @@ function CatalogSection({ onDetails, onApply }) {
 function Reviews() {
   const scrollRef = useRef(null)
   const [active, setActive] = useState(0)
-
   const scroll = (dir) => {
     if (!scrollRef.current) return
     const next = Math.max(0, Math.min(reviews.length - 1, active + dir))
@@ -408,33 +244,15 @@ function Reviews() {
           <button onClick={() => scroll(1)} className="w-9 h-9 rounded-full bg-[#111820] border border-gray-800 text-gray-400 font-bold">→</button>
         </div>
       </div>
-
       <div ref={scrollRef} className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
         {reviews.map((review) => (
           <div key={review.name} className="snap-start shrink-0 w-72 bg-[#111820] border border-gray-800 rounded-2xl p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-[#1A2230] text-[#C8F437] font-black flex items-center justify-center">
-                {review.name[0]}
-              </div>
-              <div>
-                <div className="text-white font-bold text-sm">{review.name}</div>
-                <div className="text-gray-500 text-xs">{review.platform}</div>
-              </div>
-            </div>
-            <p className="text-gray-300 text-sm italic leading-relaxed">“{review.text}”</p>
-            <div className="text-yellow-400 text-xs mt-3">★★★★★</div>
+            <div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 rounded-full bg-[#1A2230] text-[#C8F437] font-black flex items-center justify-center">{review.name[0]}</div><div><div className="text-white font-bold text-sm">{review.name}</div><div className="text-gray-500 text-xs">{review.platform}</div></div></div>
+            <p className="text-gray-300 text-sm italic leading-relaxed">“{review.text}”</p><div className="text-yellow-400 text-xs mt-3">★★★★★</div>
           </div>
         ))}
       </div>
-
-      <a
-        href="https://www.tiktok.com/@naran"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-4 flex items-center justify-center gap-2 w-full bg-[#111820] border border-gray-800 text-white font-bold text-sm py-3 rounded-xl"
-      >
-        🎵 More stories on TikTok
-      </a>
+      <a href="https://www.tiktok.com/@naran" target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center justify-center gap-2 w-full bg-[#111820] border border-gray-800 text-white font-bold text-sm py-3 rounded-xl">🎵 More stories on TikTok</a>
     </section>
   )
 }
@@ -444,12 +262,7 @@ function FAQ() {
     <section className="px-5 py-6 border-t border-gray-800">
       <SectionTitle title="FAQ" subtitle="Simple answers before you apply" />
       <div className="space-y-2">
-        {faqs.map((faq) => (
-          <details key={faq.q} className="bg-[#111820] border border-gray-800 rounded-xl">
-            <summary className="p-3 text-white text-sm font-bold cursor-pointer">{faq.q}</summary>
-            <p className="px-3 pb-3 text-gray-400 text-sm leading-relaxed">{faq.a}</p>
-          </details>
-        ))}
+        {faqs.map((faq) => <details key={faq.q} className="bg-[#111820] border border-gray-800 rounded-xl"><summary className="p-3 text-white text-sm font-bold cursor-pointer">{faq.q}</summary><p className="px-3 pb-3 text-gray-400 text-sm leading-relaxed">{faq.a}</p></details>)}
       </div>
     </section>
   )
@@ -466,6 +279,7 @@ function MultiStepForm({ preselectedMotoId }) {
   const [phoneVerified, setPhoneVerified] = useState(false)
   const [selectedMotoId, setSelectedMotoId] = useState(preselectedMotoId || '')
   const [term, setTerm] = useState(18)
+  const [depositType, setDepositType] = useState('full')
   const [docs, setDocs] = useState({ idFront: false, idBack: false, license: false, utilityBill: false })
   const [ref1, setRef1] = useState({ name: '', phone: '' })
   const [ref2, setRef2] = useState({ name: '', phone: '' })
@@ -482,505 +296,20 @@ function MultiStepForm({ preselectedMotoId }) {
     return true
   }
 
-  const uploadDoc = (key) => {
-    setDocs((prev) => ({ ...prev, [key]: true }))
-  }
+  const uploadDoc = (key) => setDocs((prev) => ({ ...prev, [key]: true }))
 
   const DocUploadBox = ({ label, docKey, icon }) => (
-    <button
-      type="button"
-      onClick={() => uploadDoc(docKey)}
-      className={`w-full rounded-xl p-4 text-left transition-all ${
-        docs[docKey]
-          ? 'bg-[#C8F437]/10 border-2 border-[#C8F437]'
-          : 'bg-[#1A2230] border-2 border-gray-700 border-dashed'
-      }`}
-    >
+    <button type="button" onClick={() => uploadDoc(docKey)} className={`w-full rounded-xl p-4 text-left transition-all ${docs[docKey] ? 'bg-[#C8F437]/10 border-2 border-[#C8F437]' : 'bg-[#1A2230] border-2 border-gray-700 border-dashed'}`}>
       <div className="flex items-center gap-3">
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${docs[docKey] ? 'bg-[#C8F437]/20' : 'bg-gray-700'}`}>
-          {docs[docKey] ? '✅' : icon}
-        </div>
-        <div>
-          <div className={`font-bold text-sm ${docs[docKey] ? 'text-[#C8F437]' : 'text-white'}`}>{label}</div>
-          <div className="text-xs text-gray-500 mt-0.5">{docs[docKey] ? 'Photo uploaded' : 'Tap to upload'}</div>
-        </div>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${docs[docKey] ? 'bg-[#C8F437]/20' : 'bg-gray-700'}`}>{docs[docKey] ? '✅' : icon}</div>
+        <div><div className={`font-bold text-sm ${docs[docKey] ? 'text-[#C8F437]' : 'text-white'}`}>{label}</div><div className="text-xs text-gray-500 mt-0.5">{docs[docKey] ? 'Photo uploaded' : 'Tap to upload'}</div></div>
       </div>
     </button>
   )
 
   return (
     <section className="px-5 py-6 border-t border-gray-800" id="apply">
-      <div className="mb-4">
-        <h2 className="text-white text-xl font-black">Apply now</h2>
-        <p className="text-gray-400 text-sm mt-1">Upload your documents to get approved</p>
-      </div>
+      <div className="mb-4"><h2 className="text-white text-xl font-black">Apply now</h2><p className="text-gray-400 text-sm mt-1">Upload your documents to get approved</p></div>
 
       <div className="bg-[#111820] rounded-2xl border-2 border-[#C8F437] overflow-hidden">
-        <div className="bg-[#1A2230] h-1.5">
-          <div className="bg-[#C8F437] h-full transition-all duration-500" style={{ width: `${progress}%` }} />
-        </div>
-
-        <div className="px-4 pt-3 pb-1 flex justify-between items-center">
-          <span className="text-xs text-gray-500">Step {step} of {totalSteps}</span>
-          {step > 1 && step < 4 && (
-            <button onClick={() => setStep(step - 1)} className="text-xs text-gray-400 underline">
-              ← Back
-            </button>
-          )}
-        </div>
-
-        <div className="p-5 pt-2">
-          {step === 1 && (
-            <div>
-              <h3 className="font-black text-lg mb-1 text-white">Your info</h3>
-              <p className="text-gray-400 text-xs mb-4">We will contact you today</p>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs text-gray-500 mb-1 block">Full name</label>
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Ex: Juan Pérez"
-                    className="w-full bg-[#1A2230] rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-[#C8F437]"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-gray-500 mb-1 block">WhatsApp</label>
-                  <input
-                    value={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value)
-                      setOtpSent(false)
-                      setOtp('')
-                      setPhoneVerified(false)
-                    }}
-                    type="tel"
-                    placeholder="300 123 4567"
-                    className="w-full bg-[#1A2230] rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-[#C8F437]"
-                  />
-                  {!phoneVerified && !otpSent && (
-                    <button
-                      type="button"
-                      onClick={() => phone.trim().length > 5 && setOtpSent(true)}
-                      className={`w-full mt-2 text-sm font-bold py-2.5 rounded-xl transition ${
-                        phone.trim().length > 5 ? 'bg-[#C8F437] text-black' : 'bg-gray-700 text-gray-500'
-                      }`}
-                    >
-                      Send code to WhatsApp
-                    </button>
-                  )}
-                  {!phoneVerified && otpSent && (
-                    <div className="mt-2 space-y-2">
-                      <input
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        placeholder="Enter code"
-                        inputMode="numeric"
-                        className="w-full bg-[#1A2230] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:ring-2 focus:ring-[#C8F437]"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => otp.trim().length > 2 && setPhoneVerified(true)}
-                        className={`w-full text-sm font-bold py-2.5 rounded-xl transition ${
-                          otp.trim().length > 2 ? 'bg-[#C8F437] text-black' : 'bg-gray-700 text-gray-500'
-                        }`}
-                      >
-                        Verify phone
-                      </button>
-                    </div>
-                  )}
-                  {phoneVerified && <div className="text-[#C8F437] text-xs font-bold mt-2">Phone verified ✅</div>}
-                </div>
-                <div className="bg-[#1A2230] rounded-xl px-4 py-3.5">
-                  <div className="text-xs text-gray-500 mb-1">City</div>
-                  <div className="text-white text-sm font-bold">Bogotá only</div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              <h3 className="font-black text-lg mb-1 text-white">Choose your moto</h3>
-              <p className="text-gray-400 text-xs mb-4">Pick one to continue</p>
-              <div className="space-y-2 mb-4">
-                {motos.map((moto) => (
-                  <button
-                    key={moto.id}
-                    onClick={() => setSelectedMotoId(moto.id)}
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-                      selectedMotoId === moto.id ? 'bg-[#C8F437]/10 border-2 border-[#C8F437]' : 'bg-[#1A2230] border-2 border-transparent'
-                    }`}
-                  >
-                    <div className="text-3xl">{moto.img}</div>
-                    <div className="flex-1">
-                      <div className="font-bold text-sm text-white">{moto.name}</div>
-                      <div className="text-xs text-gray-400">
-                        {moto.condition} · {moto.year}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-0.5">
-Deposit {fmt(moto.deposit)}
-</div>
-<div className="text-xs text-gray-500">
-Can be paid weekly in the first month
-</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[#C8F437] font-black text-sm">{fmt(moto.price18)}</div>
-                      <div className="text-gray-500 text-xs">/week</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {selectedMoto && (
-                <div>
-                  <label className="text-xs text-gray-500 mb-2 block">Plan</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[18, 12].map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => setTerm(p)}
-                        className={`py-3 rounded-xl text-sm font-bold transition-all ${
-                          term === p ? 'bg-[#C8F437] text-black' : 'bg-[#1A2230] text-gray-400'
-                        }`}
-                      >
-                        {p} months · {fmt(getWeeklyPrice(selectedMoto, p))}/week
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <h3 className="font-black text-lg mb-1 text-white">Upload documents</h3>
-<div className="bg-[#1A2230] rounded-xl p-4 mb-4">
-<div className="text-white font-bold text-sm mb-1">
-Initial payment
-</div>
-
-<div className="text-[#C8F437] font-black text-lg mb-3">
-{selectedMoto ? fmt(selectedMoto.deposit) : ''}
-</div>
-
-<div className="grid grid-cols-2 gap-2">
-<div className="grid grid-cols-2 gap-2">
-
-<div className="text-gray-400 text-xs mb-2">
-  Choose how to pay your deposit
-</div>
-
-
-  <button
-    type="button"
-    onClick={() => setDepositType('full')}
-    className={`font-bold py-2 rounded-xl text-sm ${
-      depositType === 'full'
-        ? 'bg-[#C8F437] text-black'
-        : 'bg-[#111820] text-white border border-gray-700'
-    }`}
-  >
-    Pay in full
-  </button>
-
-  <button
-    type="button"
-    onClick={() => setDepositType('weekly')}
-    className={`font-bold py-2 rounded-xl text-sm ${
-      depositType === 'weekly'
-        ? 'bg-[#C8F437] text-black'
-        : 'bg-[#111820] text-white border border-gray-700'
-    }`}
-  >
-    Pay weekly (1st month)
-  </button>
-
-</div>
-
-
-<button
-className="bg-[#111820] text-white font-bold py-2 rounded-xl text-sm border border-gray-700"
->
-Pay weekly (1st month)
-</button>
-</div>
-</div>
-              <p className="text-gray-400 text-xs mb-4">Required to get approved. Take a clear photo.</p>
-              <div className="space-y-3">
-                <DocUploadBox label="ID — front side" docKey="idFront" icon="🪪" />
-                <DocUploadBox label="ID — back side" docKey="idBack" icon="🔄" />
-                <DocUploadBox label="Driver’s license" docKey="license" icon="🏍️" />
-                <DocUploadBox label="Utility bill" docKey="utilityBill" icon="📄" />
-              </div>
-
-              <div className="mt-4 bg-[#1A2230] rounded-xl p-3 text-center">
-                <p className="text-gray-400 text-sm font-bold">Don’t have all documents now?</p>
-                <a
-                  href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi! I started my application but I will send documents later')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex w-full justify-center bg-[#0B1118] border border-gray-700 text-white font-bold text-sm py-3 rounded-xl"
-                >
-                  Send on WhatsApp later
-                </a>
-                <p className="text-gray-500 text-xs mt-2">We’ll remind you later</p>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-gray-800">
-                <h4 className="font-bold text-sm mb-3 text-white">2 references</h4>
-                <div className="space-y-3">
-                  <div className="bg-[#1A2230] rounded-xl p-3 space-y-2">
-                    <div className="text-xs text-gray-500">Reference 1</div>
-                    <input
-                      value={ref1.name}
-                      onChange={(e) => setRef1({ ...ref1, name: e.target.value })}
-                      placeholder="Name"
-                      className="w-full bg-[#0B1118] rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
-                    />
-                    <input
-                      value={ref1.phone}
-                      onChange={(e) => setRef1({ ...ref1, phone: e.target.value })}
-                      placeholder="Phone"
-                      type="tel"
-                      className="w-full bg-[#0B1118] rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
-                    />
-                  </div>
-                  <div className="bg-[#1A2230] rounded-xl p-3 space-y-2">
-                    <div className="text-xs text-gray-500">Reference 2</div>
-                    <input
-                      value={ref2.name}
-                      onChange={(e) => setRef2({ ...ref2, name: e.target.value })}
-                      placeholder="Name"
-                      className="w-full bg-[#0B1118] rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
-                    />
-                    <input
-                      value={ref2.phone}
-                      onChange={(e) => setRef2({ ...ref2, phone: e.target.value })}
-                      placeholder="Phone"
-                      type="tel"
-                      className="w-full bg-[#0B1118] rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div className="text-center py-4">
-              <div className="text-5xl mb-4">🎉</div>
-              <h3 className="font-black text-xl text-[#C8F437] mb-2">Application submitted!</h3>
-              <p className="text-gray-400 text-sm mb-6">We will call you today</p>
-
-              <div className="bg-[#1A2230] rounded-xl p-4 text-left space-y-2 mb-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Name</span>
-                  <span className="font-medium text-white">{name}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">WhatsApp</span>
-                  <span className="font-medium text-white">{phone}</span>
-                </div>
-                {selectedMoto && (
-                  <>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">Moto</span>
-                      <span className="font-medium text-white">{selectedMoto.name}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">Payment</span>
-                      <span className="font-bold text-[#C8F437]">
-                        {fmt(getWeeklyPrice(selectedMoto, term))}/week × {term} months
-                      </span>
-                    </div>
-                  </>
-                )}
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Documents</span>
-                  <span className="text-[#C8F437] font-medium">{uploadedDocs}/4 ✅</span>
-                </div>
-              </div>
-
-              <div className="bg-[#1A2230] rounded-xl p-3">
-                <p className="text-xs text-gray-400">Next steps:</p>
-                <p className="text-sm mt-1 text-white">We call → Review docs → You sign → Ride out</p>
-              </div>
-            </div>
-          )}
-
-          {step < 4 && (
-            <button
-              onClick={() => {
-                if (canNext()) setStep(step + 1)
-              }}
-              className={`w-full mt-5 font-black text-center py-4 rounded-xl text-base transition-all active:scale-95 ${
-                canNext() ? 'bg-[#FF4A4A] text-white' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {step === 1 && 'Next →'}
-              {step === 2 && (selectedMoto ? `Continue with ${selectedMoto.name} →` : 'Choose a moto')}
-              {step === 3 && 'Submit application →'}
-            </button>
-          )}
-
-          {step < 4 && <p className="text-center text-gray-600 text-xs mt-2">No co-signer · No credit history needed</p>}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ==================== MOTO DETAIL PAGE ====================
-
-function MotoPage({ moto, onBack, onApply }) {
-  const [term, setTerm] = useState(18)
-  const price = getWeeklyPrice(moto, term)
-  const waMsg = `Hi! I want the ${moto.name} ${moto.year} for ${term} months.`
-  const waURL = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`
-
-  return (
-    <div>
-      <button onClick={onBack} className="flex items-center gap-2 px-5 pt-4 text-gray-400 text-sm">
-        ← All motos
-      </button>
-
-      <section className="px-5 pt-4 pb-6">
-        <div className="bg-[#111820] rounded-2xl p-8 text-center mb-5">
-          <div className="text-7xl">{moto.img}</div>
-        </div>
-
-        <div className="flex items-center gap-2 mb-1">
-          <span className={`${moto.condition === 'New' ? 'bg-[#C8F437]' : 'bg-yellow-400'} text-black text-xs font-bold px-2 py-0.5 rounded-full`}>
-            {moto.condition}
-          </span>
-          <span className="text-gray-500 text-xs">{moto.year}</span>
-        </div>
-        <h1 className="text-white text-2xl font-black">{moto.name}</h1>
-
-        <ApplyButton onClick={() => onApply(moto.id)} className="w-full mt-4 py-4 text-base">
-          Apply now →
-        </ApplyButton>
-
-        <div className="mt-5 bg-[#111820] rounded-2xl p-4 border border-gray-800">
-          <div className="text-xs text-gray-500 mb-2">Weekly payment</div>
-          <div className="text-[#C8F437] text-4xl font-black">{fmt(price)}</div>
-          <div className="text-gray-500 text-xs mt-1">/ week · {term} months</div>
-          <div className="mt-3 pt-3 border-t border-gray-800">
-            <div className="text-gray-400 text-sm font-bold">Initial payment from {fmt(moto.deposit)}</div>
-            <div className="text-gray-500 text-xs mt-1">Can be paid weekly during the first month</div>
-          </div>
-        </div>
-
-        <div className="mt-5">
-          <div className="text-xs text-gray-500 mb-2">Plan</div>
-          <div className="grid grid-cols-2 gap-2">
-            {[18, 12].map((p) => (
-              <button
-                key={p}
-                onClick={() => setTerm(p)}
-                className={`py-3 rounded-xl text-sm font-bold transition-all ${term === p ? 'bg-[#C8F437] text-black' : 'bg-[#111820] text-gray-400'}`}
-              >
-                {p} months
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-6">
-          <EarningsCalculator moto={moto} term={term} compact />
-        </div>
-
-        <div className="mt-5 grid grid-cols-1 gap-3">
-          <ApplyButton onClick={() => onApply(moto.id)} className="py-4 text-base">
-            Apply for this moto
-          </ApplyButton>
-          <a href={waURL} target="_blank" rel="noopener noreferrer" className="text-center text-gray-400 text-sm underline">
-            or message us on WhatsApp
-          </a>
-        </div>
-      </section>
-
-      <ProcessBlock />
-      <FAQ />
-      <Footer />
-    </div>
-  )
-}
-
-function Footer() {
-  return (
-    <section className="px-5 py-6 pb-28 text-center border-t border-gray-800">
-      <p className="text-gray-600 text-xs">
-        📍 Auto. Norte #123–63, Bogotá
-        <br />
-        Mon–Fri 8AM–5PM
-      </p>
-    </section>
-  )
-}
-
-// ==================== APP ====================
-
-export default function App() {
-  const [selectedMoto, setSelectedMoto] = useState(null)
-  const [preselectedMotoId, setPreselectedMotoId] = useState('')
-  const formRef = useRef(null)
-  const motosRef = useRef(null)
-
-  const scrollToForm = (motoId = '') => {
-    setPreselectedMotoId(motoId)
-    setSelectedMoto(null)
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 50)
-  }
-
-  const scrollToMotos = () => {
-    setTimeout(() => {
-      motosRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 50)
-  }
-
-  return (
-    <div className="min-h-screen bg-[#0B1118] text-white max-w-md mx-auto">
-      <Header
-        goHome={() => {
-          setSelectedMoto(null)
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }}
-      />
-
-      {selectedMoto ? (
-        <MotoPage moto={selectedMoto} onBack={() => setSelectedMoto(null)} onApply={scrollToForm} />
-      ) : (
-        <>
-          <Hero onApply={() => scrollToForm('')} onSeeMotos={scrollToMotos} onSelectMoto={setSelectedMoto} />
-          <EarningsCalculator moto={getMotoById('akt-nkd-125')} term={18} />
-          <ProcessBlock />
-          <RequirementsBlock />
-          <div ref={motosRef}>
-            <CatalogSection onDetails={setSelectedMoto} onApply={scrollToForm} />
-          </div>
-          <div ref={formRef}>
-            <MultiStepForm key={preselectedMotoId || 'empty'} preselectedMotoId={preselectedMotoId} />
-          </div>
-          <Reviews />
-          <FAQ />
-          <Footer />
-
-          <div className="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-[#0B1118]/95 border-t border-gray-800 p-3 backdrop-blur">
-            <ApplyButton onClick={() => scrollToForm('')} className="w-full py-3.5">
-              Apply now
-            </ApplyButton>
-          </div>
-        </>
-      )}
-    </div>
-  )
-}
-
-
-
+        <div className="bg-[#1A2230] h-1.5"><div className="bg-[#C8F437]
