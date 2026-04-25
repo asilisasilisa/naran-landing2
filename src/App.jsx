@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 // ==================== DATA ====================
 
@@ -11,7 +11,6 @@ const motos = [
     deposit: 500000,
     price12: 200000,
     price18: 155000,
-    specs: { cc: '97.2 cc', motor: '4 Stroke', hp: '8.2 HP', tank: '9.1 L' },
   },
   {
     id: 'akt-nkd-125',
@@ -21,7 +20,6 @@ const motos = [
     deposit: 500000,
     price12: 200000,
     price18: 160000,
-    specs: { cc: '124 cc', motor: '4 Stroke', hp: '10.34 HP', tank: '9.8 L' },
   },
   {
     id: 'hero-eco-deluxe',
@@ -31,7 +29,6 @@ const motos = [
     deposit: 600000,
     price12: 240000,
     price18: 180000,
-    specs: { cc: '97.2 cc', motor: '4 Stroke', hp: '8.2 HP', tank: '9.5 L' },
   },
   {
     id: 'victory-combat',
@@ -41,7 +38,6 @@ const motos = [
     deposit: 400000,
     price12: 140000,
     price18: 110000,
-    specs: { cc: '109 cc', motor: '4 Stroke', hp: '8.5 HP', tank: '9 L' },
   },
 ]
 
@@ -49,24 +45,24 @@ const reviews = [
   {
     name: 'Juan G.',
     platform: 'Rappi · 8 months with naran',
-    text: "I couldn't afford a moto. With naran I started working fast. 8 months in, everything's good — paying little by little.",
+    text: "I couldn't afford a moto. With naran I started working fast. 8 months in, everything's good.",
   },
   {
     name: 'José R.',
     platform: 'Rappi + DiDi · 5 months with naran',
-    text: "No bank, no hassle. Got my moto fast and I'm already earning. Pretty simple.",
+    text: 'No bank, no hassle. Got my moto fast and I\'m already earning. Pretty simple.',
   },
   {
     name: 'Camilo L.',
     platform: 'Rappi + Yango · 11 months with naran',
-    text: "Had doubts at first, but it's worked out. I work at my own pace and I'm almost done paying off the moto.",
+    text: "Had doubts at first, but it's worked out. Almost done paying off the moto.",
   },
 ]
 
 const faqs = [
   {
     q: 'What if the moto breaks down?',
-    a: "Gas and maintenance are on you, but remember — the moto will be yours at the end! We're always here to help.",
+    a: "Gas and maintenance are on you, but the moto will be yours at the end! We're always here to help.",
   },
   {
     q: 'Do I need a deposit?',
@@ -74,28 +70,24 @@ const faqs = [
   },
   {
     q: 'Can I work on any platform?',
-    a: 'Yes! Rappi, DiDi Food, Yango, or any delivery app. Work the hours you want, on the platform you choose.',
+    a: 'Yes! Rappi, DiDi Food, Yango, or any delivery app. Work the hours you want.',
   },
   {
     q: 'Will the moto be mine?',
-    a: "Yes! Complete all payments and it's 100% yours. You're paying it off while you earn.",
+    a: "Yes! Complete all payments and it's 100% yours.",
   },
 ]
 
 // ==================== HELPERS ====================
 
 const fmt = (n) => '$' + Math.round(n).toLocaleString('es-CO')
-
-const HOURLY_RATE = 24000
-const COMMISSION_PCT = 0.104
-const GAS_PCT = 0.074
 const WA_NUMBER = '573001234567'
 
 // ==================== HEADER ====================
 
 function Header({ goHome }) {
   return (
-    <header className="sticky top-0 z-50 bg-[#C8F437] px-5 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-50 px-5 py-3 flex items-center justify-between" style={{ background: '#C8F437' }}>
       <button onClick={goHome} className="text-black font-black text-2xl tracking-tight">
         naran.
       </button>
@@ -104,104 +96,46 @@ function Header({ goHome }) {
   )
 }
 
-// ==================== CATALOG ====================
+// ==================== MOTO CARD ====================
 
-function MotoCard({ moto, onClick }) {
+function MotoCard({ moto, onApply }) {
   return (
-    <div
-      onClick={onClick}
-      className="bg-[#111820] border border-gray-800 rounded-2xl p-4 cursor-pointer hover:border-[#C8F437]/30 transition-all"
-    >
-      <div className="bg-[#1A2230] rounded-xl h-40 flex items-center justify-center mb-3">
+    <div className="rounded-2xl p-4" style={{ background: '#111820', border: '1px solid #1f2937' }}>
+      <div className="rounded-xl h-36 flex items-center justify-center mb-3" style={{ background: '#1A2230' }}>
         <span className="text-5xl">🏍️</span>
       </div>
       <div className="flex items-center gap-2 mb-1">
-        <span className="bg-[#C8F437] text-black text-xs font-bold px-2 py-0.5 rounded-full">
+        <span className="text-black text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: '#C8F437' }}>
           {moto.condition}
         </span>
         <span className="text-gray-500 text-sm">{moto.year}</span>
       </div>
       <h3 className="text-white font-bold text-lg">{moto.name}</h3>
-      <p className="text-[#C8F437] font-bold text-2xl mt-1">
+      <p className="font-bold text-2xl mt-1" style={{ color: '#C8F437' }}>
         {fmt(moto.price18)}
         <span className="text-gray-500 text-sm font-normal"> /week</span>
       </p>
-      <div className="flex gap-2 mt-4">
-        <button className="flex-1 bg-[#1A2230] border border-gray-700 text-white text-sm py-2.5 rounded-xl font-medium">
-          See details
-        </button>
-        <button className="flex-1 bg-[#C8F437] text-black text-sm font-bold py-2.5 rounded-xl">
-          Apply now →
-        </button>
-      </div>
+      <button
+        onClick={() => onApply(moto.id)}
+        className="w-full text-black text-sm font-bold py-2.5 rounded-xl mt-4 active:scale-95 transition-transform"
+        style={{ background: '#C8F437' }}
+      >
+        Apply now →
+      </button>
     </div>
   )
 }
 
-function CatalogSection({ openMoto }) {
+// ==================== CATALOG SECTION ====================
+
+function CatalogSection({ onApply }) {
   return (
     <section className="px-4 py-8">
       <h1 className="text-white text-2xl font-bold mb-1">Your moto for delivery work</h1>
-      <p className="text-gray-400 text-sm mb-6">
-        Choose your moto. Pay it off with what you earn.
-      </p>
+      <p className="text-gray-400 text-sm mb-6">Choose your moto. Pay it off with what you earn.</p>
       <div className="space-y-4">
-        {motos.map((moto) => (
-          <MotoCard key={moto.id} moto={moto} onClick={() => openMoto(moto.id)} />
-        ))}
-      </div>
-    </section>
-  )
-}
-
-// ==================== ADVANTAGES ====================
-
-function AdvantagesSection() {
-  const items = [
-    { icon: '🚀', title: 'Approved in 24h', desc: 'Reserve, we check docs, you ride' },
-    { icon: '📄', title: 'Only 4 documents', desc: 'ID · License · Utility bill · Reference' },
-    { icon: '💰', title: 'Flexible deposit', desc: 'From $400K — pay full or weekly within 1 month' },
-    { icon: '🛡️', title: 'Everything included', desc: 'SOAT + GPS + 24/7 support' },
-  ]
-
-  return (
-    <section className="px-4 py-8">
-      <div className="grid grid-cols-2 gap-3">
-        {items.map((item, i) => (
-          <div key={i} className="bg-[#111820] border border-gray-800 rounded-xl p-4">
-            <span className="text-2xl">{item.icon}</span>
-            <h3 className="text-white font-bold text-sm mt-2">{item.title}</h3>
-            <p className="text-gray-400 text-xs mt-1 leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
-      </div>
-      <p className="text-gray-600 text-xs text-center mt-4">
-        No bank · No co-signer · No credit history needed
-      </p>
-    </section>
-  )
-}
-
-// ==================== PROCESS ====================
-
-function ProcessSection() {
-  const steps = [
-    { icon: '🏍️', label: 'Choose', sub: 'your moto' },
-    { icon: '📄', label: 'Upload', sub: 'your docs' },
-    { icon: '✍️', label: 'Sign', sub: 'at our office' },
-    { icon: '🔑', label: 'Ride', sub: 'out!' },
-  ]
-
-  return (
-    <section className="px-4 py-8">
-      <h2 className="text-white text-xl font-bold text-center mb-6">4 steps. That's it.</h2>
-      <div className="grid grid-cols-4 gap-2">
-        {steps.map((s, i) => (
-          <div key={i} className="text-center">
-            <span className="text-3xl">{s.icon}</span>
-            <p className="text-white font-bold text-sm mt-2">{s.label}</p>
-            <p className="text-gray-500 text-xs">{s.sub}</p>
-          </div>
+        {motos.map((m) => (
+          <MotoCard key={m.id} moto={m} onApply={onApply} />
         ))}
       </div>
     </section>
@@ -213,21 +147,20 @@ function ProcessSection() {
 function ReviewsSection() {
   return (
     <section className="px-4 py-8">
-      <h2 className="text-white text-xl font-bold mb-4">What our drivers say</h2>
+      <h2 className="text-white text-xl font-bold mb-4">Riders like you</h2>
       <div className="space-y-3">
         {reviews.map((r, i) => (
-          <div key={i} className="bg-[#111820] border border-gray-800 rounded-xl p-4">
+          <div key={i} className="rounded-2xl p-4" style={{ background: '#111820', border: '1px solid #1f2937' }}>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center text-black font-bold text-sm" style={{ background: '#C8F437' }}>
                 {r.name[0]}
               </div>
               <div>
-                <p className="text-white font-bold text-sm">{r.name}</p>
+                <p className="text-white font-semibold text-sm">{r.name}</p>
                 <p className="text-gray-500 text-xs">{r.platform}</p>
               </div>
             </div>
-            <div className="text-yellow-400 text-sm mb-2">★★★★★</div>
-            <p className="text-gray-300 text-sm italic leading-relaxed">"{r.text}"</p>
+            <p className="text-gray-300 text-sm leading-relaxed">"{r.text}"</p>
           </div>
         ))}
       </div>
@@ -239,25 +172,22 @@ function ReviewsSection() {
 
 function FAQSection() {
   const [open, setOpen] = useState(null)
-
   return (
     <section className="px-4 py-8">
-      <h2 className="text-white text-xl font-bold mb-4">FAQ</h2>
+      <h2 className="text-white text-xl font-bold mb-4">Common questions</h2>
       <div className="space-y-2">
-        {faqs.map((faq, i) => (
-          <div key={i} className="bg-[#111820] border border-gray-800 rounded-xl overflow-hidden">
+        {faqs.map((f, i) => (
+          <div key={i} className="rounded-2xl overflow-hidden" style={{ background: '#111820', border: '1px solid #1f2937' }}>
             <button
               onClick={() => setOpen(open === i ? null : i)}
-              className="w-full text-left p-4 flex justify-between items-center"
+              className="w-full flex items-center justify-between px-4 py-3 text-left"
             >
-              <span className="text-white font-medium text-sm pr-4">{faq.q}</span>
-              <span className="text-gray-500 text-xl flex-shrink-0">
-                {open === i ? '−' : '+'}
-              </span>
+              <span className="text-white text-sm font-medium pr-4">{f.q}</span>
+              <span className="text-lg" style={{ color: '#C8F437' }}>{open === i ? '−' : '+'}</span>
             </button>
             {open === i && (
-              <div className="px-4 pb-4">
-                <p className="text-gray-400 text-sm leading-relaxed">{faq.a}</p>
+              <div className="px-4 pb-3">
+                <p className="text-gray-400 text-sm leading-relaxed">{f.a}</p>
               </div>
             )}
           </div>
@@ -267,359 +197,173 @@ function FAQSection() {
   )
 }
 
-// ==================== MULTI-STEP FORM ====================
+// ==================== FOOTER ====================
 
-function MultiStepForm({ initialMoto }) {
-  const [step, setStep] = useState(initialMoto ? 2 : 1)
-  const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    city: 'Bogotá',
-    motoId: initialMoto || '',
-    term: '18',
-    docs: { cedula: null, license: null, utility: null, reference: null },
-  })
+function Footer() {
+  return (
+    <footer className="px-4 py-8 text-center" style={{ borderTop: '1px solid #1f2937' }}>
+      <p className="text-black font-black text-xl">naran.</p>
+      <p className="text-gray-500 text-xs mt-1">© 2026 naran. Bogotá, Colombia</p>
+    </footer>
+  )
+}
 
-  const selectedMoto = motos.find((m) => m.id === form.motoId)
-  const price = selectedMoto
-    ? form.term === '18'
-      ? selectedMoto.price18
-      : selectedMoto.price12
-    : 0
+// ==================== OTP INPUT ====================
 
-  const setDoc = (key, file) =>
-    setForm({ ...form, docs: { ...form.docs, [key]: file } })
+function OTPInput({ value, onChange, onComplete }) {
+  const inputsRef = useRef([])
 
-  const docsReady =
-    form.docs.cedula && form.docs.license && form.docs.utility && form.docs.reference
+  const handleChange = (idx, val) => {
+    if (val.length > 1) val = val[val.length - 1]
+    if (val && !/^\d$/.test(val)) return
 
-  const handleSubmit = () => {
-    const msg = `Hola! Quiero aplicar:\n\nNombre: ${form.name}\nTeléfono: ${form.phone}\nCiudad: ${form.city}\nMoto: ${selectedMoto?.name}\nPlazo: ${form.term} meses\nPago semanal: ${fmt(price)}\nDepósito: ${fmt(selectedMoto?.deposit || 0)}\n\nDocs: uploaded ✅`
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`)
+    const newVal = [...value]
+    newVal[idx] = val
+    onChange(newVal)
+
+    if (val && idx < 3) {
+      inputsRef.current[idx + 1]?.focus()
+    }
+
+    if (newVal.every((d) => d !== '') && val) {
+      onComplete(newVal.join(''))
+    }
+  }
+
+  const handleKeyDown = (idx, e) => {
+    if (e.key === 'Backspace' && !value[idx] && idx > 0) {
+      inputsRef.current[idx - 1]?.focus()
+    }
   }
 
   return (
-    <section className="px-4 py-8">
-      {/* Card wrapper */}
-      <div className="bg-[#0D1117] border border-[#C8F437]/30 rounded-2xl p-5">
-        {/* Progress */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-gray-500 text-sm">Step {step} of 4</span>
-          {step > 1 && (
-            <button
-              onClick={() => setStep(step - 1)}
-              className="text-gray-500 text-sm hover:text-white transition"
-            >
-              ← Back
-            </button>
-          )}
+    <div className="flex gap-3 justify-center my-6">
+      {[0, 1, 2, 3].map((idx) => (
+        <input
+          key={idx}
+          ref={(el) => (inputsRef.current[idx] = el)}
+          type="tel"
+          maxLength={1}
+          value={value[idx] || ''}
+          onChange={(e) => handleChange(idx, e.target.value)}
+          onKeyDown={(e) => handleKeyDown(idx, e)}
+          className="w-14 h-16 text-center text-2xl font-bold text-white rounded-xl outline-none transition-colors"
+          style={{
+            background: '#111820',
+            border: value[idx] ? '2px solid #C8F437' : '2px solid #374151',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ==================== MULTI-STEP FORM ====================
+
+function StepBar({ step }) {
+  const labels = ['Info', 'OTP', 'Moto', 'Docs', 'Review']
+  return (
+    <div className="flex items-center gap-1 mb-6">
+      {labels.map((l, i) => (
+        <div key={i} className="flex-1 flex flex-col items-center gap-1">
+          <div
+            className="h-1.5 w-full rounded-full transition-colors"
+            style={{ background: i + 1 <= step ? '#C8F437' : '#374151' }}
+          />
+          <span
+            className="font-semibold"
+            style={{ fontSize: '10px', color: i + 1 <= step ? '#C8F437' : '#4b5563' }}
+          >
+            {l}
+          </span>
         </div>
+      ))}
+    </div>
+  )
+}
 
-        {/* Step bar */}
-        <div className="flex gap-1 mb-6">
-          {[1, 2, 3, 4].map((s) => (
-            <div
-              key={s}
-              className={`h-1 flex-1 rounded-full transition-all ${
-                s <= step ? 'bg-[#C8F437]' : 'bg-gray-800'
-              }`}
-            />
-          ))}
-        </div>
+function ApplyForm({ preselectedMotoId, goHome }) {
+  const [step, setStep] = useState(1)
 
-        {/* ===== STEP 1: Personal info ===== */}
-        {step === 1 && (
-          <div>
-            <h2 className="text-white font-bold text-xl mb-1">Let's get started</h2>
-            <p className="text-gray-400 text-sm mb-5">Tell us about yourself</p>
+  // Step 1 — personal
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [city, setCity] = useState('Bogotá')
 
-            <div className="space-y-3">
-              <input
-                type="text"
-                placeholder="Full name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full bg-[#111820] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
-              />
-              <input
-                type="tel"
-                placeholder="Phone number"
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="w-full bg-[#111820] border border-gray-800 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-600 focus:border-[#C8F437] outline-none"
-              />
-              <div className="bg-[#111820] border border-gray-800 text-gray-400 rounded-xl px-4 py-3 text-sm">
-                📍 Bogotá
-              </div>
-            </div>
+  // Step 2 — OTP
+  const [otp, setOtp] = useState(['', '', '', ''])
+  const [otpVerified, setOtpVerified] = useState(false)
+  const [otpSent, setOtpSent] = useState(false)
+  const [otpError, setOtpError] = useState('')
+  const [resendTimer, setResendTimer] = useState(0)
 
-            <button
-              onClick={() => {
-                if (form.name && form.phone) setStep(2)
-              }}
-              disabled={!form.name || !form.phone}
-              className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg mt-5 hover:bg-[#d4f94d] transition disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Continue →
-            </button>
-          </div>
-        )}
+  // Step 3 — moto
+  const [selectedMoto, setSelectedMoto] = useState(preselectedMotoId || '')
+  const [term, setTerm] = useState(18)
+  const [depositType, setDepositType] = useState('full')
 
-        {/* ===== STEP 2: Choose moto ===== */}
-        {step === 2 && (
-          <div>
-            <h2 className="text-white font-bold text-xl mb-1">Choose your moto</h2>
-            <p className="text-gray-400 text-sm mb-5">Which one do you want to ride?</p>
+  // Step 4 — docs
+  const [cedula, setCedula] = useState(null)
+  const [license, setLicense] = useState(null)
+  const [utilityBill, setUtilityBill] = useState(null)
+  const [reference, setReference] = useState(null)
 
-            {/* Moto list */}
-            <div className="space-y-2 mb-5">
-              {motos.map((m) => {
-                const isSelected = form.motoId === m.id
-                const mPrice = form.term === '18' ? m.price18 : m.price12
-                return (
-                  <button
-                    key={m.id}
-                    onClick={() => setForm({ ...form, motoId: m.id })}
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
-                      isSelected
-                        ? 'bg-[#111820] border-[#C8F437]'
-                        : 'bg-[#111820] border-gray-800 hover:border-gray-600'
-                    }`}
-                  >
-                    <div className="w-12 h-12 bg-[#1A2230] rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">🏍️</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-bold text-sm">{m.name}</p>
-                      <p className="text-gray-500 text-xs">
-                        {m.condition} · {m.year}
-                      </p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className="text-[#C8F437] font-bold">{fmt(mPrice)}</p>
-                      <p className="text-gray-600 text-xs">/wk</p>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
+  const moto = motos.find((m) => m.id === selectedMoto)
+  const weeklyPrice = moto ? (term === 12 ? moto.price12 : moto.price18) : 0
 
-            {/* Term selector */}
-            {selectedMoto && (
-              <>
-                <p className="text-gray-500 text-sm mb-2">Term</p>
-                <div className="flex gap-2 mb-4">
-                  {['18', '12'].map((t) => {
-                    const p = t === '18' ? selectedMoto.price18 : selectedMoto.price12
-                    return (
-                      <button
-                        key={t}
-                        onClick={() => setForm({ ...form, term: t })}
-                        className={`flex-1 py-3 rounded-xl font-bold text-sm transition ${
-                          form.term === t
-                            ? 'bg-[#C8F437] text-black'
-                            : 'bg-[#111820] border border-gray-800 text-gray-500'
-                        }`}
-                      >
-                        {t} months · {fmt(p)}/wk
-                      </button>
-                    )
-                  })}
-                </div>
+  // Resend timer
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const t = setTimeout(() => setResendTimer(resendTimer - 1), 1000)
+      return () => clearTimeout(t)
+    }
+  }, [resendTimer])
 
-                {/* ✅ DEPOSIT INFO */}
-                <div className="bg-[#111820] border border-gray-800 rounded-xl p-4 mb-5">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-400 text-sm">Deposit</span>
-                    <span className="text-[#C8F437] font-bold text-lg">
-                      {fmt(selectedMoto.deposit)}
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-sm mt-0.5">💡</span>
-                    <p className="text-gray-500 text-xs leading-relaxed">
-                      Pay in full or split into{' '}
-                      <span className="text-gray-300 font-medium">
-                        weekly payments within 1 month
-                      </span>
-                      . The deposit reserves your moto and is{' '}
-                      <span className="text-gray-300 font-medium">non-refundable</span>.
-                    </p>
-                  </div>
-                </div>
-              </>
-            )}
+  const sendOtp = () => {
+    setOtpSent(true)
+    setResendTimer(30)
+    setOtpError('')
+    setOtp(['', '', '', ''])
+  }
 
-            <button
-              onClick={() => {
-                if (form.motoId) setStep(3)
-              }}
-              disabled={!form.motoId}
-              className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg hover:bg-[#d4f94d] transition disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Continue with {selectedMoto?.name || '...'} →
-            </button>
+  const verifyOtp = (code) => {
+    // For demo: accept any 4-digit code
+    if (code.length === 4) {
+      setOtpVerified(true)
+      setOtpError('')
+      setTimeout(() => setStep(3), 400)
+    } else {
+      setOtpError('Invalid code. Try again.')
+    }
+  }
 
-            <p className="text-gray-600 text-xs text-center mt-3">
-              No commitment · No co-signer needed
-            </p>
-          </div>
-        )}
+  const canNext = () => {
+    if (step === 1) return name.trim() && phone.trim().length >= 7
+    if (step === 2) return otpVerified
+    if (step === 3) return selectedMoto
+    if (step === 4) return cedula && license
+    return true
+  }
 
-        {/* ===== STEP 3: Upload docs ===== */}
-        {step === 3 && (
-          <div>
-            <h2 className="text-white font-bold text-xl mb-1">Upload your documents</h2>
-            <p className="text-gray-400 text-sm mb-5">
-              Take a clear photo of each document
-            </p>
+  const next = () => {
+    if (!canNext()) return
+    if (step === 1) {
+      sendOtp()
+      setStep(2)
+      return
+    }
+    if (step < 5) setStep(step + 1)
+  }
 
-            <div className="space-y-3">
-              {[
-                { key: 'cedula', label: 'Cédula (ID)', icon: '🪪', desc: 'Front and back' },
-                { key: 'license', label: 'Driver's license', icon: '🏍️', desc: 'Category A2' },
-                {
-                  key: 'utility',
-                  label: 'Utility bill',
-                  icon: '🏠',
-                  desc: 'Last 3 months',
-                },
-                {
-                  key: 'reference',
-                  label: 'Personal reference',
-                  icon: '👤',
-                  desc: 'Name & phone of a contact',
-                },
-              ].map((doc) => {
-                const file = form.docs[doc.key]
-                return (
-                  <label
-                    key={doc.key}
-                    className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                      file
-                        ? 'bg-[#111820] border-[#C8F437]/50'
-                        : 'bg-[#111820] border-gray-800 hover:border-gray-600'
-                    }`}
-                  >
-                    <span className="text-2xl">{doc.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium text-sm">{doc.label}</p>
-                      <p className="text-gray-500 text-xs">
-                        {file ? `✅ ${file.name}` : doc.desc}
-                      </p>
-                    </div>
-                    <div
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold ${
-                        file
-                          ? 'bg-[#C8F437]/20 text-[#C8F437]'
-                          : 'bg-gray-800 text-gray-400'
-                      }`}
-                    >
-                      {file ? 'Change' : 'Upload'}
-                    </div>
-                    <input
-                      type="file"
-                      accept="image/*,.pdf"
-                      className="hidden"
-                      onChange={(e) => {
-                        if (e.target.files[0]) setDoc(doc.key, e.target.files[0])
-                      }}
-                    />
-                  </label>
-                )
-              })}
-            </div>
+  const back = () => {
+    if (step > 1) setStep(step - 1)
+  }
 
-            <div className="mt-5 bg-[#111820] border border-gray-800 rounded-xl p-3">
-              <p className="text-gray-500 text-xs text-center">
-                📷 Photos must be clear and legible. Accepted: JPG, PNG, PDF
-              </p>
-            </div>
+  const sendWhatsApp = () => {
+    const msg = encodeURIComponent(
+      `🟡 NARAN APPLICATION\n\nName: ${name}\nPhone: ${phone}\nCity: ${city}\n\nMoto: ${moto?.name}\nTerm: ${term} months\nWeekly: ${fmt(weeklyPrice)}\nDeposit: ${fmt(moto?.deposit || 0)} (${depositType})\n\nDocs: cédula ✅, license ✅${utilityBill ? ', utility ✅' : ''}${reference ? ', reference ✅' : ''}`
+    )
+    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank')
+  }
 
-            <button
-              onClick={() => {
-                if (docsReady) setStep(4)
-              }}
-              disabled={!docsReady}
-              className="w-full bg-[#C8F437] text-black font-bold py-3.5 rounded-xl text-lg mt-5 hover:bg-[#d4f94d] transition disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Continue →
-            </button>
-
-            <button
-              onClick={() => setStep(4)}
-              className="w-full text-gray-600 text-sm mt-3 py-2 hover:text-gray-400 transition"
-            >
-              Skip for now — upload later
-            </button>
-          </div>
-        )}
-
-        {/* ===== STEP 4: Review & Submit ===== */}
-        {step === 4 && (
-          <div>
-            <h2 className="text-white font-bold text-xl mb-1">Review & apply</h2>
-            <p className="text-gray-400 text-sm mb-5">
-              Make sure everything looks good
-            </p>
-
-            <div className="space-y-3">
-              {/* Personal */}
-              <div className="bg-[#111820] border border-gray-800 rounded-xl p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <p className="text-gray-500 text-xs uppercase tracking-wide">You</p>
-                  <button
-                    onClick={() => setStep(1)}
-                    className="text-[#C8F437] text-xs"
-                  >
-                    Edit
-                  </button>
-                </div>
-                <p className="text-white font-bold text-sm">{form.name}</p>
-                <p className="text-gray-400 text-sm">{form.phone}</p>
-                <p className="text-gray-400 text-sm">📍 {form.city}</p>
-              </div>
-
-              {/* Moto */}
-              <div className="bg-[#111820] border border-gray-800 rounded-xl p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <p className="text-gray-500 text-xs uppercase tracking-wide">Moto</p>
-                  <button
-                    onClick={() => setStep(2)}
-                    className="text-[#C8F437] text-xs"
-                  >
-                    Edit
-                  </button>
-                </div>
-                <p className="text-white font-bold text-sm">{selectedMoto?.name}</p>
-                <div className="flex justify-between mt-1">
-                  <p className="text-gray-400 text-sm">{form.term} months</p>
-                  <p className="text-[#C8F437] font-bold">{fmt(price)}/wk</p>
-                </div>
-                <div className="flex justify-between mt-1">
-                  <p className="text-gray-400 text-sm">Deposit</p>
-                  <p className="text-white font-medium">{fmt(selectedMoto?.deposit || 0)}</p>
-                </div>
-              </div>
-
-              {/* Docs */}
-              <div className="bg-[#111820] border border-gray-800 rounded-xl p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <p className="text-gray-500 text-xs uppercase tracking-wide">Documents</p>
-                  <button
-                    onClick={() => setStep(3)}
-                    className="text-[#C8F437] text-xs"
-                  >
-                    Edit
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { key: 'cedula', label: 'Cédula' },
-                    { key: 'license', label: 'License' },
-                    { key: 'utility', label: 'Utility bill' },
-                    { key: 'reference', label: 'Reference' },
-                  ].map((d) => (
-                    <div key={d.key} className="flex items-center gap-1.5">
-                      <span className={form.docs[d.key] ? 'text-green-400' : 'text-gray-600'}>
-                        {f
+  const inputClass
